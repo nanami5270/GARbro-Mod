@@ -34,7 +34,7 @@ namespace GameRes.Formats.Elf
     public class RmtFormat : ImageFormat
     {
         public override string         Tag { get { return "RMT"; } }
-        public override string Description { get { return "Ai5 engine compressed image format"; } }
+        public override string Description { get { return "Ai6 engine compressed image format"; } }
         public override uint     Signature { get { return 0x20544D52; } } // 'RMT '
 
         public override ImageMetaData ReadMetaData (IBinaryStream file)
