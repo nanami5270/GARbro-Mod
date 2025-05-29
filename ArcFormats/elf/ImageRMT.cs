@@ -1,6 +1,6 @@
 //! \file       ImageRMT.cs
 //! \date       2017 Dec 11
-//! \brief      Ai5 engine compressed image format.
+//! \brief      Ai6 engine compressed image format.
 //
 // Copyright (C) 2017 by morkt
 //
