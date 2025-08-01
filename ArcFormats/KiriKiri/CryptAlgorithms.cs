@@ -1599,23 +1599,15 @@ namespace GameRes.Formats.KiriKiri
     {
         public override void Decrypt(Xp3Entry entry, long offset, byte[] buffer, int pos, int count)
         {
-            try
+            // only apply xor every 8 bytes
+            for (int i = 0; i < count; ++i)
             {
-                // only apply xor every 8 bytes
-                for (int i = 0; i < count; ++i)
+                if ((offset + i) % 8 == 0)
                 {
-                    if ((offset + i) % 8 == 0)
-                    {
-                        buffer[offset + i] ^= (byte)entry.Hash;
-                        i += 7;
-                    }
+                    buffer[offset + i] ^= (byte)entry.Hash;
+                    i += 7;
                 }
             }
-            catch (Exception e)
-            {
-                System.Console.WriteLine(e.Message);
-            }
-
         }
 
         public override void Encrypt(Xp3Entry entry, long offset, byte[] buffer, int pos, int count)
