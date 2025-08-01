@@ -1600,11 +1600,11 @@ namespace GameRes.Formats.KiriKiri
         public override void Decrypt(Xp3Entry entry, long offset, byte[] buffer, int pos, int count)
         {
             // only apply xor every 8 bytes
-            for (int i = 0; i < count; ++i)
+            for (int i = 0; i < count; i++)
             {
-                if ((offset + i) % 8 == 0)
+                if ((i + pos) % 8 == 0)
                 {
-                    buffer[offset + i] ^= (byte)entry.Hash;
+                    buffer[i + pos] ^= (byte)entry.Hash;
                     i += 7;
                 }
             }
