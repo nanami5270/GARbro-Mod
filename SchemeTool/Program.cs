@@ -1,4 +1,4 @@
-﻿using System;
+﻿﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -18,7 +18,13 @@ namespace SchemeTool
             {
                 GameRes.FormatCatalog.Instance.DeserializeScheme(stream);
             }
-
+#if false
+            using (Stream stream = File.Create(".\\GameData\\Formats.json"))
+            {
+                GameRes.FormatCatalog.Instance.SerializeSchemeJson(stream);
+                return;
+            }
+#endif
             GameRes.Formats.KiriKiri.Xp3Opener format = GameRes.FormatCatalog.Instance.ArcFormats
                 .FirstOrDefault(a => a is GameRes.Formats.KiriKiri.Xp3Opener) as GameRes.Formats.KiriKiri.Xp3Opener;
 
