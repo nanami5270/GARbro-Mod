@@ -28,47 +28,38 @@ namespace SchemeTool
 
                 // Add scheme information here
 
-                #if true
-                byte[] cb = File.ReadAllBytes(@"C:\Users\MLChinoo\Desktop\limelight_lj\control_block.bin");
+#if true
+                byte[] cb = File.ReadAllBytes(@"MEM_10014628_00001000.mem");
                 var cb2 = MemoryMarshal.Cast<byte, uint>(cb);
                 for (int i = 0; i < cb2.Length; i++)
                     cb2[i] = ~cb2[i];
                 var cs = new GameRes.Formats.KiriKiri.CxScheme
                 {
-                    Mask = 0x2e2,
-                    Offset = 0x283,
-                    PrologOrder = new byte[] { 1, 0, 2 },
-                    OddBranchOrder = new byte[] { 1, 2, 4, 3, 0, 5 },
-                    EvenBranchOrder = new byte[] { 2, 5, 0, 7, 6, 1, 3, 4 },
+                    Mask = 0x000,
+                    Offset = 0x000,
+                    PrologOrder = new byte[] { 0, 1, 2 },
+                    OddBranchOrder = new byte[] { 0, 1, 2, 3, 4, 5 },
+                    EvenBranchOrder = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7 },
                     ControlBlock = cb2.ToArray()
                 };
                 var crypt = new GameRes.Formats.KiriKiri.HxCrypt(cs);
                 crypt.RandomType = 0;
-                crypt.FilterKey = 0xb5a900b497d99000;
+                crypt.FilterKey = 0x0000000000000000;
                 crypt.NamesFile = "HxNames.lst";
-                var key1 = SoapHexBinary.Parse("90731d0f07858de0c5553c10035d174003d400e7d7ccaa76ba4ca078bcc6cc78").Value;
-                var key2 = SoapHexBinary.Parse("092063cd25d03538a83e10e9ef5d1609").Value;
+                var keyA1 = SoapHexBinary.Parse("0000000000000000000000000000000000000000000000000000000000000000").Value;
+                var keyA2 = SoapHexBinary.Parse("00000000000000000000000000000000").Value;
+                var keyB1 = SoapHexBinary.Parse("0000000000000000000000000000000000000000000000000000000000000000").Value;
+                var keyB2 = SoapHexBinary.Parse("00000000000000000000000000000000").Value;
                 crypt.IndexKeyDict = new Dictionary<string, GameRes.Formats.KiriKiri.HxIndexKey>()
                 {
-                    { "data.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "bgimage.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "bgm.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "evimage.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "evimage2.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "fgimage.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "image.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "patch.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "scn.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "uipsd.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "video.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "voice.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } },
-                    { "voice2.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = key1, Key2 = key2 } }
+                    { "data.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = keyA1, Key2 = keyA2 } },
+                    { "update.xp3", new GameRes.Formats.KiriKiri.HxIndexKey { Key1 = keyB1, Key2 = keyB2 } },
                 };
-                #else
+#else
                 GameRes.Formats.KiriKiri.ICrypt crypt = new GameRes.Formats.KiriKiri.XorCrypt(0x00);
-                #endif
+#endif
 
-                    scheme.KnownSchemes.Add("Limelight Lemonade Jam", crypt);
+                // scheme.KnownSchemes.Add("game title", crypt);
             }
 
             var gameMap = typeof(GameRes.FormatCatalog).GetField("m_game_map", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)
@@ -77,7 +68,7 @@ namespace SchemeTool
             if (gameMap != null)
             {
                 // Add file name here
-                 // gameMap.Add("SabbatOfTheWitch.exe", "Sabbat of the Witch [Steam]");
+                // gameMap.Add("game.exe", "game title");
             }
 
             // Save database
