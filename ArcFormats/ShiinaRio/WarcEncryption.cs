@@ -25,6 +25,7 @@
 
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.Serialization;
 using GameRes.Utility;
 
 namespace GameRes.Formats.ShiinaRio
@@ -608,10 +609,14 @@ namespace GameRes.Formats.ShiinaRio
     }
 
     [Serializable]
+    [DataContract]
     public class ImageArray : IByteArray
     {
+        [DataMember]
         private byte[]  m_common;
+        [DataMember]
         private byte[]  m_extra;
+        [DataMember]
         private int     m_common_length;
 
         public ImageArray (byte[] common) : this (common, common.Length, Array.Empty<byte>())
