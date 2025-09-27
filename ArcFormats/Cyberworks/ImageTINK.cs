@@ -151,6 +151,7 @@ namespace GameRes.Formats.Cyberworks
                         BitmapSource frame;
                         using (var membuf = new MemoryStream (png_size+4))
                         {
+                            input.CopyTo (membuf);
                             var decoder = new PngBitmapDecoder (new StreamRegion (membuf, membuf.Length-png_size), BitmapCreateOptions.None,
                                                                 BitmapCacheOption.OnLoad);
                             frame = decoder.Frames[0];
