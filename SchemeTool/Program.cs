@@ -18,7 +18,7 @@ namespace SchemeTool
             {
                 GameRes.FormatCatalog.Instance.DeserializeScheme(stream);
             }
-#if true
+#if false
             using (Stream stream = File.Create(".\\GameData\\Formats.json"))
             {
                 GameRes.FormatCatalog.Instance.SerializeSchemeJson(stream);
