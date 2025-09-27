@@ -289,10 +289,10 @@ namespace GameRes.Formats.FC01
                         int src = 0;
                         for (int j = ChannelOrder[i]; j < m_output.Length; j += 3)
                         {
-                                m_output[j] = plane[src++];
+                            m_output[j] = plane[src++];
                         }
                     }
-                        Trace.WriteLine(string.Format("Found matching key {0:X2}", m_key), "[MCG]");
+                    // Trace.WriteLine(string.Format("Found matching key {0:X2}", m_key), "[MCG]");
                 }
                 catch (InvalidFormatException)
                 {
