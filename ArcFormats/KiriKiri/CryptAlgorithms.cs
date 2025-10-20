@@ -1,4 +1,4 @@
-//! \file       CryptAlgorithms.cs
+﻿//! \file       CryptAlgorithms.cs
 //! \date       Thu Feb 04 12:08:40 2016
 //! \brief      KiriKiri engine encryption algorithms.
 //
@@ -1615,4 +1615,44 @@ namespace GameRes.Formats.KiriKiri
             Decrypt(entry, offset, buffer, pos, count);
         }
     }
+
+    [Serializable]
+    public class MiburoCrypt : ICrypt 
+    {
+        private const int KeySize = 29;
+
+        public override void Decrypt(Xp3Entry entry, long offset, byte[] buffer, int pos, int count)
+        {
+            byte[] key = InitKey(entry.Hash);
+
+            for (int i = 0; i < count; ++i)
+            {
+                buffer[pos + i] ^= key[(offset + i) % KeySize];
+            }
+        }
+
+        public override void Encrypt(Xp3Entry entry, long offset, byte[] buffer, int pos, int count)
+        {
+            Decrypt(entry, offset, buffer, pos, count);
+        }
+
+        private byte[] InitKey(uint hash)
+        {
+            hash = hash & 0x1FFFFFFF;
+            hash |= ((hash & 1) << KeySize);
+
+            byte[] key = new byte[KeySize];
+
+            for (int i = 0; i < KeySize; i++)
+            {
+                key[i] = (byte)hash;
+
+                hash = (hash >> 8) | ((hash << 0x15) & 0xFF000000);
+
+            }
+
+            return key;
+        }
+    }
+
 }
