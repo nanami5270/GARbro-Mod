@@ -492,7 +492,7 @@ namespace GameRes.Formats.Kaguya
                     return new ParamsV2Deserializer (input, version);
                 else if (version.Major < 5)
                     return new ParamsV4Deserializer (input, version);
-                else if (5 == version.Major && (version.Minor >= 4 && version.Minor <= 7))
+                else if (5 == version.Major && (version.Minor >= 4 && version.Minor <= 8))
                     return new ParamsV5Deserializer (input, version);
             }
             throw new UnknownEncryptionScheme();
