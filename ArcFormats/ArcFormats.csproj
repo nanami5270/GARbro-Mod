@@ -161,6 +161,7 @@
     <Compile Include="Ism\ImagePNG.cs" />
     <Compile Include="Kid\ArcDATRAW.cs" />
     <Compile Include="Kid\ArcKLZ.cs" />
+    <Compile Include="Kid\ArcP2T.cs" />
     <Compile Include="Kid\ImageBIP.cs" />
     <Compile Include="Kid\ImageBIParc.cs" />
     <Compile Include="Kid\ImageKLZ.cs" />
@@ -218,6 +219,7 @@
     <Compile Include="NipponIchi\ArcPSFS.cs" />
     <Compile Include="NipponIchi\ImageNMT.cs" />
     <Compile Include="NScripter\Script.cs" />
+    <Compile Include="Ps1\ImageTIM.cs" />
     <Compile Include="Psp\ArcQPK.cs" />
     <Compile Include="ScrPlayer\ImageIMG.cs" />
     <Compile Include="SingleFileArchive.cs" />
@@ -1378,4 +1380,5 @@ xcopy "$(ProjectDir)\Resources\*" "$(TargetDir)\GameData\" /D /Y &gt;NUL</PostBu
   <Target Name="AfterBuild">
   </Target>
   -->
+
 </Project>
