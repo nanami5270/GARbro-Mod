@@ -49,19 +49,21 @@ namespace GameRes.Formats.Rugp
         }
 
         static readonly Dictionary<string, string> SupportedClasses = new Dictionary<string, string> {
-            { "CRip007",            "image" },
-            { "CRip",               "image" },
-            { "CS5i",               "image" },
-            { "CIcon",              "image" },
-            { "CRioPng",            "image" },
-            { "CRsa",               "script" },
-            { "CVmFunc",            "script" },
-            { "CSinpleText",        "script" },
-            { "CrUAVMTextScript",   "script" },
-            { "CWaveAudio",         "audio" },
-            { "CrelicHicompAudio",  "audio" },
-            { "COggStream",         "audio" },
-            { "CWindowsMediaVideo", "video" },
+            { "CRip007",                "image" },
+            { "CRip",                   "image" },
+            { "CS5i",                   "image" },
+            { "CIcon",                  "image" },
+            { "CRioPng",                "image" },
+            { "CRsa",                   "script" },
+            { "CVmFunc",                "script" },
+            { "CSinpleText",            "script" },
+            { "CrUAVMScript",           "script" },
+            { "CrUAVMTextScript",       "script" },
+            { "CrUAVMTextScriptHeader", "script" },
+            { "CWaveAudio",             "audio" },
+            { "CrelicHicompAudio",      "audio" },
+            { "COggStream",             "audio" },
+            { "CWindowsMediaVideo",     "video" },
         };
 
         public override ArcFile TryOpen (ArcView file)
@@ -505,7 +507,7 @@ namespace GameRes.Formats.Rugp
                     {
                         node.Offset = (uint)id1;
                         node.Size   = (uint)id2;
-                        if (node.Offset + node.Size > m_input.Length)
+                        if ((long)node.Offset + node.Size > m_input.Length)
                         {
                             node.Offset = DecodeOffset (id1);
                             node.Size = DecodeSize (id2);
