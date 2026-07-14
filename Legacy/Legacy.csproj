@@ -224,6 +224,8 @@
     <Compile Include="RSystem\ImageRSG.cs" />
     <Compile Include="Ruri\ArcKBM.cs" />
     <Compile Include="Ruri\ImageKBM.cs" />
+    <Compile Include="NxLib\ImageDCG.cs" />
+    <Compile Include="ScenarioKun\ImageSJ1.cs" />
     <Compile Include="Brownie\ArcNAF.cs" />
     <Compile Include="Brownie\AudioWAV.cs" />
     <Compile Include="Discovery\ArcDAT.cs" />
