@@ -255,6 +255,7 @@
     <Compile Include="ArcARCX.cs" />
     <Compile Include="ArcASAR.cs" />
     <Compile Include="Artemis\ArcMJA.cs" />
+    <Compile Include="Leaf\LeafCompression.cs" />
     <Compile Include="Leaf\LeafVideo.cs" />
     <Compile Include="LightVN\ArcMCDAT.cs" />
     <Compile Include="Macintosh\ImagePICT.cs" />
