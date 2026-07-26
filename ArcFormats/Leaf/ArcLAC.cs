@@ -23,9 +23,12 @@
 // IN THE SOFTWARE.
 //
 
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.IO;
+using System.Linq;
+using System.Text;
 using GameRes.Compression;
 
 namespace GameRes.Formats.Leaf
@@ -37,7 +40,7 @@ namespace GameRes.Formats.Leaf
         public override string Description { get { return "Leaf resource archive"; } }
         public override uint     Signature { get { return 0x43414C; } } // 'LAC'
         public override bool  IsHierarchic { get { return true; } }
-        public override bool      CanWrite { get { return false; } }
+        public override bool      CanWrite { get { return true; } }
 
         public override ArcFile TryOpen (ArcView file)
         {
@@ -147,6 +150,97 @@ namespace GameRes.Formats.Leaf
             }
             Stream input = arc.File.CreateStream (entry.Offset, entry.Size);
             return new LzssStream (input);
+        }
+
+        // --- REPACK IMPLEMENTATION ---
+
+        public override void Create (Stream output, IEnumerable<Entry> entries, ResourceOptions options, EntryCallback callback)
+        {
+            int count = entries.Count();
+            using (var writer = new BinaryWriter (output, Encoding.ASCII, true))
+            {
+                // Write Header (LAC)
+                writer.Write (Signature);
+                writer.Write (count);
+
+                long table_offset = 8;
+                long data_offset = table_offset + (count * 0x28);
+
+                writer.BaseStream.Position = data_offset;
+
+                var entryInfos = new List<EntryInfo>();
+                int i = 0;
+
+                foreach (var entry in entries)
+                {
+                    if (callback != null)
+                        callback (i + 1, entry, null);
+
+                    long currentOffset = writer.BaseStream.Position;
+
+                    using (var input = File.OpenRead(entry.Name))
+                    {
+                        byte[] raw_data = new byte[input.Length];
+                        input.Read (raw_data, 0, (int)input.Length);
+
+                        // Compress
+                        byte[] compressedData = LeafLzss.Compress (raw_data);
+
+                        uint totalSize;
+                        bool isPacked;
+
+                        // Write Data
+                        if (compressedData.Length < raw_data.Length)
+                        {
+                            isPacked = true;
+                            totalSize = (uint)(compressedData.Length + 4);
+                            writer.Write ((uint)raw_data.Length);
+                            writer.Write (compressedData);
+                        }
+                        else
+                        {
+                            isPacked = false;
+                            totalSize = (uint)raw_data.Length;
+                            writer.Write (raw_data);
+                        }
+
+                        entryInfos.Add (new EntryInfo
+                        {
+                            Name = Path.GetFileName (entry.Name),
+                            Offset = (uint)currentOffset,
+                            Size = totalSize,
+                            IsPacked = isPacked
+                        });
+                    }
+                    i++;
+                }
+
+                // Write File Table
+                writer.BaseStream.Position = table_offset;
+                foreach (var info in entryInfos)
+                {
+                    byte[] name_buf = new byte[0x20];
+
+                    byte[] name_bytes = Encodings.cp932.GetBytes (info.Name);
+                    int len = Math.Min (name_bytes.Length, 0x1F);
+                    for (int j = 0; j < len; ++j)
+                        name_buf[j] = (byte)(name_bytes[j] ^ 0xFF);
+                    if (info.IsPacked)
+                        name_buf[0x1F] = 1;
+
+                    writer.Write (name_buf);
+                    writer.Write (info.Size);
+                    writer.Write (info.Offset);
+                }
+            }
+        }
+
+        struct EntryInfo
+        {
+            public string Name;
+            public uint Offset;
+            public uint Size;
+            public bool IsPacked;
         }
     }
 }
