@@ -314,6 +314,7 @@
     <Compile Include="Marron\ArcCPN.cs" />
     <Compile Include="Mina\ArcML2.cs" />
     <Compile Include="Mina\ImageMD.cs" />
+    <Compile Include="Mink\ArcBINZ.cs" />
     <Compile Include="Mink\ArcMINK.cs" />
     <Compile Include="Mutation\ArcDPF.cs" />
     <Compile Include="Pinpai\ArcARC.cs" />
