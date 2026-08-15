@@ -205,6 +205,7 @@
     <Compile Include="GScripter\ArcDATA.cs" />
     <Compile Include="Guyzware\ArcDat.cs" />
     <Compile Include="ImageKTX.cs" />
+    <Compile Include="ImageRCG.cs" />
     <Compile Include="Ism\ImagePNG.cs" />
     <Compile Include="Kid\ArcDATRAW.cs" />
     <Compile Include="Kid\ArcKLZ.cs" />
