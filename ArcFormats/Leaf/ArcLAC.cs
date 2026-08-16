@@ -158,6 +158,9 @@ namespace GameRes.Formats.Leaf
 
         public override void Create (Stream output, IEnumerable<Entry> entries, ResourceOptions options, EntryCallback callback)
         {
+            // Order entries using the same order as the original PAK/LAC archive.
+            entries = entries.OrderBy (x => x, LacEntryComparer.Instance).ToList();
+
             int count = entries.Count();
             using (var writer = new BinaryWriter (output, Encoding.ASCII, true))
             {
@@ -243,6 +246,49 @@ namespace GameRes.Formats.Leaf
             public uint Offset;
             public uint Size;
             public bool IsPacked;
+        }
+
+        internal sealed class LacEntryComparer : IComparer<Entry>
+        {
+            public static readonly LacEntryComparer Instance = new LacEntryComparer();
+
+            public int Compare (Entry x, Entry y)
+            {
+                string x_name = Path.GetFileName (x.Name);
+                string y_name = Path.GetFileName (y.Name);
+
+                // LAC names use '_' as a separator. The archive's order puts
+                // that separator after digits and before letters, which may not be
+                // the order produced by the current-culture string comparer.
+                int result = CompareNames (x_name, y_name);
+                if (result != 0)
+                    return result;
+
+                // Keep the ordering deterministic for names that differ only
+                // by case or by a path component.
+                return StringComparer.Ordinal.Compare (x.Name, y.Name);
+            }
+
+            private static int CompareNames (string x, string y)
+            {
+                int length = Math.Min (x.Length, y.Length);
+                for (int i = 0; i < length; ++i)
+                {
+                    char xc = char.ToUpperInvariant (x[i]);
+                    char yc = char.ToUpperInvariant (y[i]);
+                    if (xc == yc)
+                        continue;
+
+                    if (xc == '_')
+                        return char.IsLetter (yc) ? -1 : 1;
+                    if (yc == '_')
+                        return char.IsLetter (xc) ? 1 : -1;
+
+                    return xc < yc ? -1 : 1;
+                }
+
+                return x.Length.CompareTo (y.Length);
+            }
         }
     }
 }
