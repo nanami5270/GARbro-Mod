@@ -153,6 +153,8 @@ namespace GameRes.Formats.Leaf
         }
 
         // --- REPACK IMPLEMENTATION ---
+        // Note: This implementation was made for the Leaf game "Kimi ga Yobu, Megiddo no Oka de".
+        // Other games may or may not be supported.
 
         public override void Create (Stream output, IEnumerable<Entry> entries, ResourceOptions options, EntryCallback callback)
         {
