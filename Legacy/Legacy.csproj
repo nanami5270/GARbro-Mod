@@ -86,6 +86,7 @@
     <Compile Include="Acme\ImageARD.cs" />
     <Compile Include="Acme\ImagePMG.cs" />
     <Compile Include="ADVGSys\ImageBMP.cs" />
+    <Compile Include="AdvS\ArcDAT.cs" />
     <Compile Include="Ags32i\AudioAGS.cs" />
     <Compile Include="Ags32i\ImageGSS.cs" />
     <Compile Include="Airyu\ArcCHR.cs" />
