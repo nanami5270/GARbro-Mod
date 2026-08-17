@@ -41,6 +41,12 @@ namespace GameRes.Formats.Chromium
 
         [JsonProperty("offset")]
         public string Offset { get; set; }
+
+        [JsonProperty("unpacked")]
+        public bool Unpacked { get; set; }
+
+        [JsonProperty("link")]
+        public string Link { get; set; }
     }
 
     [Export(typeof(ArchiveFormat))]
@@ -59,17 +65,34 @@ namespace GameRes.Formats.Chromium
 
         public override ArcFile TryOpen (ArcView file)
         {
+            if (file.MaxOffset < 0x10)
+                return null;
             if (file.View.ReadUInt32 (4) != file.View.ReadUInt32 (8) + 4)
                 return null;
             uint index_size = file.View.ReadUInt32 (0x0C);
+            if (index_size > file.MaxOffset - 0x10)
+                return null;
             string json = file.View.ReadString (0x10, index_size, Encoding.UTF8);
-            var dict = JsonConvert.DeserializeObject<AsarNode> (json);
+            AsarNode dict;
+            try
+            {
+                dict = JsonConvert.DeserializeObject<AsarNode> (json);
+            }
+            catch (JsonException)
+            {
+                return null;
+            }
+            if (null == dict)
+                return null;
             var dir = new List<Entry> ();
-            ParseIndex (dir, dict, (uint)((index_size + 0x10 + 3) & ~3));
+            long pad = (0x10L + index_size + 3) & ~3L;
+            ParseIndex (dir, dict, pad);
+            dir.RemoveAll (e => e.Size != 0 && !e.CheckPlacement (file.MaxOffset));
             return new ArcFile (file, this, dir);
         }
 
-        internal void ParseIndex (List<Entry> dir, AsarNode dict, uint pad, string cur = "") {
+        void ParseIndex (List<Entry> dir, AsarNode dict, long pad, string cur = "")
+        {
             if (dict.Files != null)
             {
                 foreach (var kv in dict.Files)
@@ -81,10 +104,15 @@ namespace GameRes.Formats.Chromium
             }
             else
             {
+                if (dict.Unpacked || !string.IsNullOrEmpty (dict.Link) || string.IsNullOrEmpty (dict.Offset))
+                    return;
+                long offset;
+                if (!long.TryParse (dict.Offset, out offset))
+                    return;
                 var entry = new Entry {
                     Name = cur,
                     Size = dict.Size,
-                    Offset = uint.Parse (dict.Offset) + pad,
+                    Offset = offset + pad,
                     Type = FormatCatalog.Instance.GetTypeFromName (cur)
                 };
                 dir.Add (entry);
