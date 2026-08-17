@@ -189,7 +189,7 @@ namespace GameRes.Formats.Leaf
                         input.Read (rawData, 0, (int)input.Length);
 
                         // Compress
-                        byte[] compressedData = LeafLzss.Compress (rawData);
+                        byte[] compressedData = LeafLzss.Compress (rawData, 0);
 
                         uint totalSize;
                         bool isPacked;

@@ -199,7 +199,7 @@ namespace GameRes.Formats.Leaf
                         input.Read (rawData, 0, (int)input.Length);
 
                         // Compress
-                        byte[] compressedData = LeafLzss.Compress (rawData);
+                        byte[] compressedData = LeafLzss.Compress (rawData, 0x20);
 
                         // Write Data (Prefix + LZSS)
                         writer.Write ((uint)compressedData.Length);

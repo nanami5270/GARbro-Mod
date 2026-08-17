@@ -35,7 +35,7 @@ namespace GameRes.Formats.Leaf
         const int THR = 2;
         const int NIL = N;
 
-        public static byte[] Compress (byte[] input)
+        public static byte[] Compress (byte[] input, byte frameFill)
         {
             if (input.Length == 0) return new byte[0];
 
@@ -127,7 +127,7 @@ namespace GameRes.Formats.Leaf
                 int s = 0, r = N - F;
                 int len = 0;
 
-                for (int j = 0; j < r; j++) text_buf[j] = 0x20; 
+                for (int j = 0; j < r; j++) text_buf[j] = frameFill;
 
                 int bytes_read = 0;
                 for (len = 0; len < F && bytes_read < input.Length; len++)
