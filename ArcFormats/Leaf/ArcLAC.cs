@@ -195,7 +195,8 @@ namespace GameRes.Formats.Leaf
                         bool isPacked;
 
                         // Write Data
-                        if (raw_data.Length > 32 && compressedData.Length < raw_data.Length)
+                        if (raw_data.Length > 32 // Skip small uncompressed data that should not be compressed.
+                            && compressedData.Length < raw_data.Length)
                         {
                             isPacked = true;
                             totalSize = (uint)(compressedData.Length + 4);
