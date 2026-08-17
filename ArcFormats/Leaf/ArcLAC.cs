@@ -168,10 +168,10 @@ namespace GameRes.Formats.Leaf
                 writer.Write (Signature);
                 writer.Write (count);
 
-                long table_offset = 8;
-                long data_offset = table_offset + (count * 0x28);
+                long tableOffset = 8;
+                long dataOffset = tableOffset + (count * 0x28);
 
-                writer.BaseStream.Position = data_offset;
+                writer.BaseStream.Position = dataOffset;
 
                 var entryInfos = new List<EntryInfo>();
                 int i = 0;
@@ -185,29 +185,29 @@ namespace GameRes.Formats.Leaf
 
                     using (var input = File.OpenRead(entry.Name))
                     {
-                        byte[] raw_data = new byte[input.Length];
-                        input.Read (raw_data, 0, (int)input.Length);
+                        byte[] rawData = new byte[input.Length];
+                        input.Read (rawData, 0, (int)input.Length);
 
                         // Compress
-                        byte[] compressedData = LeafLzss.Compress (raw_data);
+                        byte[] compressedData = LeafLzss.Compress (rawData);
 
                         uint totalSize;
                         bool isPacked;
 
                         // Write Data
-                        if (raw_data.Length > 32 // Skip small uncompressed data that should not be compressed.
-                            && compressedData.Length < raw_data.Length)
+                        if (rawData.Length > 32 // Skip small uncompressed data that should not be compressed.
+                            && compressedData.Length < rawData.Length)
                         {
                             isPacked = true;
                             totalSize = (uint)(compressedData.Length + 4);
-                            writer.Write ((uint)raw_data.Length);
+                            writer.Write ((uint)rawData.Length);
                             writer.Write (compressedData);
                         }
                         else
                         {
                             isPacked = false;
-                            totalSize = (uint)raw_data.Length;
-                            writer.Write (raw_data);
+                            totalSize = (uint)rawData.Length;
+                            writer.Write (rawData);
                         }
 
                         entryInfos.Add (new EntryInfo
@@ -222,19 +222,19 @@ namespace GameRes.Formats.Leaf
                 }
 
                 // Write File Table
-                writer.BaseStream.Position = table_offset;
+                writer.BaseStream.Position = tableOffset;
                 foreach (var info in entryInfos)
                 {
-                    byte[] name_buf = new byte[0x20];
+                    byte[] nameBuf = new byte[0x20];
 
-                    byte[] name_bytes = Encodings.cp932.GetBytes (info.Name);
-                    int len = Math.Min (name_bytes.Length, 0x1F);
+                    byte[] nameBytes = Encodings.cp932.GetBytes (info.Name);
+                    int len = Math.Min (nameBytes.Length, 0x1F);
                     for (int j = 0; j < len; ++j)
-                        name_buf[j] = (byte)(name_bytes[j] ^ 0xFF);
+                        nameBuf[j] = (byte)(nameBytes[j] ^ 0xFF);
                     if (info.IsPacked)
-                        name_buf[0x1F] = 1;
+                        nameBuf[0x1F] = 1;
 
-                    writer.Write (name_buf);
+                    writer.Write (nameBuf);
                     writer.Write (info.Size);
                     writer.Write (info.Offset);
                 }
@@ -255,13 +255,13 @@ namespace GameRes.Formats.Leaf
 
             public int Compare (Entry x, Entry y)
             {
-                string x_name = Path.GetFileName (x.Name);
-                string y_name = Path.GetFileName (y.Name);
+                string xName = Path.GetFileName (x.Name);
+                string yName = Path.GetFileName (y.Name);
 
                 // LAC names use '_' as a separator. The archive's order puts
                 // that separator after digits and before letters, which may not be
                 // the order produced by the current-culture string comparer.
-                int result = CompareNames (x_name, y_name);
+                int result = CompareNames (xName, yName);
                 if (result != 0)
                     return result;
 
