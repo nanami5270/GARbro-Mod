@@ -106,6 +106,8 @@
     <Compile Include="Artel\ArcPFD.cs" />
     <Compile Include="Artel\AudioMUW.cs" />
     <Compile Include="Artel\ImageMRL.cs" />
+    <Compile Include="Artifact\ArcMOO.cs" />
+    <Compile Include="Artifact\ImageLZS.cs" />
     <Compile Include="Asura\ArcPAK.cs" />
     <Compile Include="Asura\ImageMTG.cs" />
     <Compile Include="AyPio\ArcDLB.cs" />
