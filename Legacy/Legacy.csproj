@@ -214,6 +214,7 @@
     <Compile Include="ProjectMyu\ImageGAM.cs" />
     <Compile Include="Ransel\ArcBCD.cs" />
     <Compile Include="Rare\ArcX.cs" />
+    <Compile Include="Rave\ImageRCG.cs" />
     <Compile Include="RedZone\ArcPAK.cs" />
     <Compile Include="Adv98\ImageGPC.cs" />
     <Compile Include="RedZone\ScriptQDO.cs" />
