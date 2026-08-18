@@ -35,7 +35,7 @@ namespace GameRes.Formats.ComicPlayer
     [Export(typeof(ArchiveFormat))]
     public class Cp3Opener : ArchiveFormat
     {
-        public override string         Tag { get { return "CP3"; } }
+        public override string         Tag { get { return "CP3/CM"; } }
         public override string Description { get { return "Interactive Comic Player resource archive"; } }
         public override uint     Signature { get { return 0x50334D43; } } // 'CM3PKG'
         public override bool  IsHierarchic { get { return false; } }
