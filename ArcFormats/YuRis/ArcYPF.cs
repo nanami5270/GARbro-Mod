@@ -507,14 +507,23 @@ namespace GameRes.Formats.YuRis
                         return null;
                     byte[] raw_name = m_file.View.ReadBytes (dir_offset, name_size);
                     dir_offset += name_size;
-                    if (guess_key)
+                    for (int ext_size = 4; ext_size <= 5; ++ext_size)
                     {
-                        if (name_size < 4)
-                            return null;
-                        // assume filename contains '.' and 3-characters extension.
-                        key = (byte)(raw_name[name_size-4] ^ '.');
-                        guess_key = false;
+                        if (!guess_key || name_size < ext_size)
+                            break;
+                        key = (byte)(raw_name[name_size - ext_size] ^ '.');
+                        int c = 1;
+                        for (; c < ext_size; ++c)
+                        {
+                            char t = (char)(raw_name[name_size - c] ^ key);
+                            if (!char.IsLetter (t))
+                                break;
+                        }
+                        if (c == ext_size)
+                            guess_key = false;
                     }
+                    if (guess_key)
+                        return null;
                     for (uint i = 0; i < name_size; ++i)
                     {
                         raw_name[i] ^= key;
