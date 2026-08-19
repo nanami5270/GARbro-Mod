@@ -543,7 +543,7 @@ namespace GameRes.Formats.Strings {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Number of files exceedes archive limit..
+        ///   Looks up a localized string similar to Number of files exceeds archive limit..
         /// </summary>
         public static string MsgTooManyFiles {
             get {

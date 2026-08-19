@@ -46,6 +46,7 @@ namespace GameRes.Formats.Rave
         public override ImageMetaData ReadMetaData (IBinaryStream stream)
         {
             var meta = new ImageMetaData ();
+            meta.BPP = 24;
             meta.Width = stream.ReadUInt16 ();
             meta.Height = stream.ReadUInt16 ();
             meta.OffsetX = 0;
@@ -80,7 +81,6 @@ namespace GameRes.Formats.Rave
         public override ImageMetaData ReadMetaData (IBinaryStream stream)
         {
             var meta = new RcgMetaData ();
-            meta.BPP = 24;
             meta.Width = stream.ReadUInt16 ();
             meta.Height = stream.ReadUInt16 ();
             meta.OffsetX = 0;

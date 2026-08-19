@@ -206,7 +206,7 @@ namespace GameRes
         public static ImageFormat  Tga => s_TgaFormat.Value;
 
         /// <summary>
-        /// Desereialize color map from <paramref name="input"/> stream, consisting of specified number of
+        /// Deserialize color map from <paramref name="input"/> stream, consisting of specified number of
         /// <paramref name="colors"/> stored in specified <paramref name="format"/>.
         /// Default number of colors is 256 and format is 4-byte BGRX (where X is an unsignificant byte).
         /// </summary>

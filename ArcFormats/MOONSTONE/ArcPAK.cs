@@ -57,7 +57,7 @@ namespace GameRes.Formats.Moonstone
                 var entry = Create<Entry> (name);
                 entry.Size  = file.View.ReadUInt32 (index_offset + 0x38);
                 entry.Offset = base_offset + file.View.ReadUInt32 (index_offset + 0x34);
-                // accually there are 2 duplicate offsets for each file in the index 
+                // actually there are 2 duplicate offsets for each file in the index 
                 if (!entry.CheckPlacement (file.MaxOffset))
                     return null;
                 dir.Add (entry);
