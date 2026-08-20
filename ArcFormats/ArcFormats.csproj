@@ -259,6 +259,7 @@
     <Compile Include="Artemis\ArcMJA.cs" />
     <Compile Include="Leaf\LeafVideo.cs" />
     <Compile Include="LightVN\ArcMCDAT.cs" />
+    <Compile Include="LightVN\ArcVNDAT.cs" />
     <Compile Include="Macintosh\ImagePICT.cs" />
     <Compile Include="Macromedia\ArcDXR.cs" />
     <Compile Include="Macromedia\AudioSND.cs" />

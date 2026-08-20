@@ -121,7 +121,7 @@ namespace GameRes.Formats.LightVN
         }
 
         private static readonly string smIndexRelativePath = "\\Data\\_\\0.mcdat";
-        private static readonly byte[] smDefaultKey = new byte[]
+        public static readonly byte[] DefaultKey = new byte[]
         {
             0x64, 0x36, 0x63, 0x35, 0x66, 0x4B, 0x49, 0x33, 0x47, 0x67, 0x42, 0x57, 0x70, 0x5A, 0x46, 0x33,
             0x54, 0x7A, 0x36, 0x69, 0x61, 0x33, 0x6B, 0x46, 0x30,
@@ -187,7 +187,7 @@ namespace GameRes.Formats.LightVN
 
         private byte[] QueryKey()
         {
-            return smDefaultKey;
+            return DefaultKey;
         }
     }
 }
