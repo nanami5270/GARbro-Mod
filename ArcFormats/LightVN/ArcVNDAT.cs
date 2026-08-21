@@ -97,5 +97,7 @@ namespace GameRes.Formats.LightVN
             McdatArchive.Decrypt (data, McdatOpener.DefaultKey, 100);
             return new BinMemoryStream (data, zent.Name);
         }
+
+        public override ResourceScheme Scheme { get; set; }
     }
 }
