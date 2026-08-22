@@ -230,6 +230,10 @@
     <Compile Include="Hypatia\ArcLPK.cs" />
     <Compile Include="Hypatia\ImageLSG.cs" />
     <Compile Include="Illusion\ArcPP.cs" />
+    <Compile Include="Illusion\ImageEMA.cs" />
+    <Compile Include="Illusion\WidgetPP.xaml.cs">
+      <DependentUpon>WidgetPP.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interheart\ImageBMP.cs" />
     <Compile Include="Interheart\ImageHMP.cs" />
     <Compile Include="CatSystem\ArcZT.cs" />
@@ -1283,6 +1287,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FC01\WidgetMCG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Illusion\WidgetPP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

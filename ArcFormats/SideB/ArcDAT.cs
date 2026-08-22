@@ -88,16 +88,16 @@ namespace GameRes.Formats.AttacheCase
                     string info_str = Encoding.UTF8.GetString (info);
                     var matches = Regex.Matches (info_str, @"^U_\d+:([^\t]*)\t(\d*)\t", RegexOptions.Multiline);
                     uint offset = 0;
-		    foreach (Match match in matches)
+                    foreach (Match match in matches)
                     {
-			string name = match.Groups[1].Value;
-		    	uint size = uint.Parse (match.Groups[2].Value);
-		    	var entry = Create<Entry> (name);
+                        string name = match.Groups[1].Value;
+                        uint size = uint.Parse (match.Groups[2].Value);
+                        var entry = Create<Entry> (name);
                         entry.Offset = offset;
                         entry.Size = size;
                         offset += size;
-	    		dir.Add (entry);
-		    }
+                        dir.Add (entry);
+                    }
                 }
             }
 

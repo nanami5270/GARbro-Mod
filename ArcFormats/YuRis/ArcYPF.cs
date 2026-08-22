@@ -482,7 +482,7 @@ namespace GameRes.Formats.YuRis
                 m_version = version;
             }
             // int32-name_checksum, byte-name_count, *-name, byte-file_type
-	        // byte-pack_flag, int32-size, int32-packed_size, int32-offset, int32-file_checksum
+            // byte-pack_flag, int32-size, int32-packed_size, int32-offset, int32-file_checksum
 
             public List<Entry> ScanDir (YpfScheme scheme, long base_offset = 0)
             {

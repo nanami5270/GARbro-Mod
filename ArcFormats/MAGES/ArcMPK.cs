@@ -66,7 +66,7 @@ namespace GameRes.Formats.MAGES
                 index_offset = 0x48;
                 for (int i = 0; i < count; ++i)
                 {
-				    var name = file.View.ReadString (index_offset+0x18, 0xE0);
+                    var name = file.View.ReadString (index_offset+0x18, 0xE0);
                     var entry = Create<PackedEntry> (name);
                     entry.Offset = file.View.ReadInt64 (index_offset);
                     entry.Size = file.View.ReadUInt32 (index_offset+8);

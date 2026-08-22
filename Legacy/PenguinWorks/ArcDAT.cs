@@ -37,6 +37,8 @@ namespace GameRes.Formats.PenguinWorks {
         public override bool      CanWrite { get { return false; } }
 
         public override ArcFile TryOpen(ArcView file) {
+            if (!file.Name.HasExtension(".dat"))
+                return null;
             int count = file.View.ReadInt32(0);
             if (!IsSaneCount(count))
                 return null;
@@ -45,6 +47,8 @@ namespace GameRes.Formats.PenguinWorks {
             int index_offset = 4, base_offset = 24 * count + 4;
             for (int i = 0; i < count; i++) {
                 var name = file.View.ReadString(index_offset, 16);
+                if (string.IsNullOrEmpty(name))
+                    return null;
                 var entry = Create<Entry>(name);
                 entry.Size = file.View.ReadUInt32(index_offset + 16);
                 entry.Offset = base_offset + file.View.ReadUInt32(index_offset + 20);
