@@ -107,6 +107,9 @@ namespace GameRes.Formats.KiriKiri
 
             var dir_name = VFS.GetDirectoryName (arc.File.Name);
             var tpm_name = VFS.CombinePath (dir_name, TpmFileName);
+            // Try search in "plugin" directory
+            if (!VFS.FileExists (tpm_name))
+                tpm_name = VFS.CombinePath (VFS.CombinePath (dir_name, "plugin"), TpmFileName);
             using (var tpm = VFS.OpenView (tpm_name))
             {
                 if (tpm.MaxOffset < 0x1000 || tpm.MaxOffset > uint.MaxValue)
