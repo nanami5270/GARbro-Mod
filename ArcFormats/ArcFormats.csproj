@@ -521,6 +521,7 @@
     <Compile Include="Seraphim\ImageCP3.cs" />
     <Compile Include="ShiinaRio\ArcWARC1.0.cs" />
     <Compile Include="ShiinaRio\ImageCHD.cs" />
+    <Compile Include="SideB\ArcDAT.cs" />
     <Compile Include="Slg\ImageTIM.cs" />
     <Compile Include="Software House Parsley\ArcCG2.cs" />
     <Compile Include="Software House Parsley\ArcPAC.cs" />
