@@ -26,7 +26,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using GameRes.Formats;
+using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
+using System.Text;
+using CommunityToolkit.HighPerformance;
+using GameRes.Utility.Serialization;
 
 namespace GameRes.Formats.NEKOWORKs
 {
@@ -39,61 +43,111 @@ namespace GameRes.Formats.NEKOWORKs
         public override bool IsHierarchic { get { return true; } }
         public override bool CanWrite { get { return false; } }
 
+        [StructLayout(LayoutKind.Explicit, Size = 0x50)]
+        private struct EXFSHeader
+        {
+            [FieldOffset(0x00)]
+            public uint Signature;
+            [FieldOffset(0x04)]
+            public uint ReaderVersion;
+            [FieldOffset(0x08)]
+            public uint WriterVersion;
+            [FieldOffset(0x0C)]
+            public uint FileCount;
+            [FieldOffset(0x10)]
+            public long HeaderSize;
+            [FieldOffset(0x18)]
+            public long EntryTableSize;
+            [FieldOffset(0x20)]
+            public long PathTableSize;
+            [FieldOffset(0x28)]
+            public long ResourceTableOffset;
+
+            [FieldOffset(0x30)]
+            public long Reserve1;
+            [FieldOffset(0x38)]
+            public long Reserve2;
+            [FieldOffset(0x40)]
+            public long Reserve3;
+            [FieldOffset(0x48)]
+            public long Reserve4;
+
+            public unsafe static int Size()
+            {
+                return Unsafe.SizeOf<EXFSHeader>();
+            }
+        }
+
+        [StructLayout(LayoutKind.Explicit, Size = 0x20)]
+        private struct EXFSFileEntry
+        {
+            [FieldOffset(0x00)]
+            public long FilePathOffset;
+            [FieldOffset(0x08)]
+            public long FilePathSize;
+            [FieldOffset(0x10)]
+            public long FileOffset;
+            [FieldOffset(0x18)]
+            public long FileSize;
+
+            public unsafe static int Size()
+            {
+                return Unsafe.SizeOf<EXFSFileEntry>();
+            }
+        }
+
         public override ArcFile TryOpen(ArcView file)
         {
-            if (!file.View.AsciiEqual(0, "EXFS"))
-                return null;
-
-            int fileCount = file.View.ReadInt32(0x0C);
-            uint infoOffset = file.View.ReadUInt32(0x10);
-            uint infoSize = file.View.ReadUInt32(0x18);
-            uint nameBlockSize = file.View.ReadUInt32(0x20);
-            uint baseDataOffset = file.View.ReadUInt32(0x28);
-
-            if (!IsSaneCount(fileCount))
-                return null;
-
-            long namesOffset = infoOffset + infoSize;
-            if (namesOffset + nameBlockSize > file.MaxOffset)
-                return null;
-
-            byte[] nameData = file.View.ReadBytes(namesOffset, nameBlockSize);
-            var nameList = new List<string>(fileCount);
-            int start = 0;
-            for (int i = 0; i < nameData.Length; ++i)
+            if (file.MaxOffset < EXFSHeader.Size())
             {
-                if (nameData[i] == (byte)'\n')
+                return null;
+            }
+
+            using (ArcViewStream stream = file.CreateStream())
+            {
+                stream.ReadStruct(out EXFSHeader hdr);
+                if (hdr.Signature != 0x53465845u)
                 {
-                    if (i > start)
-                        nameList.Add(System.Text.Encoding.UTF8.GetString(nameData, start, i - start));
-                    start = i + 1;
-                }
-            }
-
-            if (nameList.Count < fileCount)
-                return null;
-
-            var dir = new List<Entry>(fileCount);
-            long indexOffset = infoOffset;
-
-            for (int i = 0; i < fileCount; ++i)
-            {
-                long entryPos = indexOffset + i * 0x20;
-
-                uint dataOffset = file.View.ReadUInt32(entryPos + 0x10);
-                uint dataSize = file.View.ReadUInt32(entryPos + 0x18);
-
-                var entry = Create<Entry>(nameList[i]);
-                entry.Offset = baseDataOffset + dataOffset;
-                entry.Size = dataSize;
-
-                if (!entry.CheckPlacement(file.MaxOffset))
                     return null;
+                }
+                if (hdr.ReaderVersion == 0u)
+                {
+                    return null;
+                }
 
-                dir.Add(entry);
+                stream.Position = hdr.HeaderSize;
+                byte[] entryTableBytes = new byte[hdr.EntryTableSize];
+                byte[] pathTableBytes = new byte[hdr.PathTableSize];
+                if (stream.Read(entryTableBytes) != entryTableBytes.Length)
+                {
+                    return null;
+                }
+                if (stream.Read(pathTableBytes) != pathTableBytes.Length)
+                {
+                    return null;
+                }
+
+                ReadOnlySpan<EXFSFileEntry> exfsEntries = MemoryMarshal.Cast<byte, EXFSFileEntry>(entryTableBytes);
+
+                List<Entry> dir = new List<Entry>((int)hdr.FileCount);
+                for (uint i = 0; i < hdr.FileCount; ++i)
+                {
+                    EXFSFileEntry fe = exfsEntries[(int)i];
+                    string fn = Encoding.UTF8.GetString(pathTableBytes, (int)fe.FilePathOffset, (int)fe.FilePathSize);
+
+                    Entry entry = Create<Entry>(fn);
+                    entry.Offset = hdr.ResourceTableOffset + fe.FileOffset;
+                    entry.Size = (uint)fe.FileSize;
+
+                    if (!entry.CheckPlacement(file.MaxOffset))
+                    { 
+                        return null;
+                    }
+
+                    dir.Add(entry);
+                }
+                return new ArcFile(file, this, dir);
             }
-
-            return new ArcFile(file, this, dir);
         }
     }
 }
