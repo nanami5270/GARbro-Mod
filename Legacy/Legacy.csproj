@@ -86,6 +86,7 @@
     <Compile Include="Acme\ImageARD.cs" />
     <Compile Include="Acme\ImagePMG.cs" />
     <Compile Include="ADVGSys\ImageBMP.cs" />
+    <Compile Include="AdvS\ArcDAT.cs" />
     <Compile Include="Ags32i\AudioAGS.cs" />
     <Compile Include="Ags32i\ImageGSS.cs" />
     <Compile Include="Airyu\ArcCHR.cs" />
@@ -105,6 +106,8 @@
     <Compile Include="Artel\ArcPFD.cs" />
     <Compile Include="Artel\AudioMUW.cs" />
     <Compile Include="Artel\ImageMRL.cs" />
+    <Compile Include="Artifact\ArcMOO.cs" />
+    <Compile Include="Artifact\ImageLZS.cs" />
     <Compile Include="Asura\ArcPAK.cs" />
     <Compile Include="Asura\ImageMTG.cs" />
     <Compile Include="AyPio\ArcDLB.cs" />
@@ -213,6 +216,7 @@
     <Compile Include="ProjectMyu\ImageGAM.cs" />
     <Compile Include="Ransel\ArcBCD.cs" />
     <Compile Include="Rare\ArcX.cs" />
+    <Compile Include="Rave\ImageRCG.cs" />
     <Compile Include="RedZone\ArcPAK.cs" />
     <Compile Include="Adv98\ImageGPC.cs" />
     <Compile Include="RedZone\ScriptQDO.cs" />
@@ -224,6 +228,8 @@
     <Compile Include="RSystem\ImageRSG.cs" />
     <Compile Include="Ruri\ArcKBM.cs" />
     <Compile Include="Ruri\ImageKBM.cs" />
+    <Compile Include="NxLib\ImageDCG.cs" />
+    <Compile Include="ScenarioKun\ImageSJ1.cs" />
     <Compile Include="Brownie\ArcNAF.cs" />
     <Compile Include="Brownie\AudioWAV.cs" />
     <Compile Include="Discovery\ArcDAT.cs" />
@@ -312,6 +318,7 @@
     <Compile Include="Marron\ArcCPN.cs" />
     <Compile Include="Mina\ArcML2.cs" />
     <Compile Include="Mina\ImageMD.cs" />
+    <Compile Include="Mink\ArcBINZ.cs" />
     <Compile Include="Mink\ArcMINK.cs" />
     <Compile Include="Mutation\ArcDPF.cs" />
     <Compile Include="Pinpai\ArcARC.cs" />

@@ -37,7 +37,7 @@ namespace GameRes.Formats.Parsley
     public class CgOpener : ArchiveFormat
     {
         public override string         Tag { get { return "DAT/yanepack"; } }
-        public override string Description { get { return "YaneSDK resouce archive"; } }
+        public override string Description { get { return "YaneSDK resource archive"; } }
         public override uint     Signature { get { return 0; } }
         public override bool  IsHierarchic { get { return false; } }
         public override bool      CanWrite { get { return false; } }

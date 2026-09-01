@@ -45,10 +45,10 @@ namespace GameRes.Formats.CatSystem
         }
 
         struct ZtSubdirectory
-		{
+        {
             public string Name;
             public long Offset;
-		}
+        }
 
         public override ArcFile TryOpen (ArcView file)
         {

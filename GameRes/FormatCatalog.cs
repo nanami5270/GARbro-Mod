@@ -353,7 +353,7 @@ namespace GameRes
             }
         }
 
-        public void SerializeScheme (Stream output)
+        public void SerializeScheme (Stream output, HashSet<string> excluded = null)
         {
             var db = new SchemeDataBase {
                 Version = CurrentSchemeVersion,
@@ -362,6 +362,8 @@ namespace GameRes
             };
             foreach (var format in Formats)
             {
+                if (null != excluded && excluded.Contains (format.Tag))
+                    continue;
                 var scheme = format.Scheme;
                 if (null != scheme)
                     db.SchemeMap.Add (format.Tag, scheme);
@@ -434,7 +436,7 @@ namespace GameRes
             }
         }
 
-        public void SerializeSchemeJson (Stream output)
+        public void SerializeSchemeJson (Stream output, HashSet<string> excluded = null)
         {
             var db = new SchemeDataBase
             {
@@ -444,6 +446,8 @@ namespace GameRes
             };
             foreach (var format in Formats)
             {
+                if (null != excluded && excluded.Contains (format.Tag))
+                    continue;
                 var scheme = format.Scheme;
                 if (null != scheme)
                     db.SchemeMap[format.Tag] = scheme;
