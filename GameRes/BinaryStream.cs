@@ -86,7 +86,7 @@ namespace GameRes
         string ReadCString (int length);
 
         /// <summary>
-        /// Read zero-terminated string from stream in specefied encoding.
+        /// Read zero-terminated string from stream in specified encoding.
         /// Stream is positioned after a zero byte that terminates a string, or at end of stream, whichever
         /// comes first.
         /// </summary>

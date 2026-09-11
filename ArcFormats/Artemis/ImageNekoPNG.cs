@@ -44,7 +44,7 @@ namespace GameRes.Formats.Artemis
     [Export(typeof(ImageFormat))]
     public class ImageNekoPNG : ImageFormat
     {
-        public override string         Tag { get { return "PNG"; } }
+        public override string         Tag { get { return "PNG/NekoNyan"; } }
         public override string Description { get { return "NekoNyan PNG image format"; } }
         public override uint     Signature { get { return 0x00000040; } }
 

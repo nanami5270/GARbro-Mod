@@ -184,8 +184,8 @@ namespace GameRes.Formats.YuRis
                         {
                             var compress_data = new byte[entry.Size];
                             input.Read(compress_data, 0, compress_data.Length);
-                            var decomprrss_data = Snappier.Snappy.DecompressToArray (compress_data);
-                            input = new BinMemoryStream(decomprrss_data, entry.Name);
+                            var decompress_data = Snappier.Snappy.DecompressToArray (compress_data);
+                            input = new BinMemoryStream(decompress_data, entry.Name);
                             break;
                         }
                         case YpfCompression.Zlib:
@@ -482,7 +482,7 @@ namespace GameRes.Formats.YuRis
                 m_version = version;
             }
             // int32-name_checksum, byte-name_count, *-name, byte-file_type
-	        // byte-pack_flag, int32-size, int32-packed_size, int32-offset, int32-file_checksum
+            // byte-pack_flag, int32-size, int32-packed_size, int32-offset, int32-file_checksum
 
             public List<Entry> ScanDir (YpfScheme scheme, long base_offset = 0)
             {
@@ -507,14 +507,23 @@ namespace GameRes.Formats.YuRis
                         return null;
                     byte[] raw_name = m_file.View.ReadBytes (dir_offset, name_size);
                     dir_offset += name_size;
-                    if (guess_key)
+                    for (int ext_size = 4; ext_size <= 5; ++ext_size)
                     {
-                        if (name_size < 4)
-                            return null;
-                        // assume filename contains '.' and 3-characters extension.
-                        key = (byte)(raw_name[name_size-4] ^ '.');
-                        guess_key = false;
+                        if (!guess_key || name_size < ext_size)
+                            break;
+                        key = (byte)(raw_name[name_size - ext_size] ^ '.');
+                        int c = 1;
+                        for (; c < ext_size; ++c)
+                        {
+                            char t = (char)(raw_name[name_size - c] ^ key);
+                            if (!char.IsLetter (t))
+                                break;
+                        }
+                        if (c == ext_size)
+                            guess_key = false;
                     }
+                    if (guess_key)
+                        return null;
                     for (uint i = 0; i < name_size; ++i)
                     {
                         raw_name[i] ^= key;

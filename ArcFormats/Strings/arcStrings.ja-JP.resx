@@ -241,7 +241,7 @@ Choose appropriate encryption scheme.</comment>
   </data>
   <data name="MsgTooManyFiles" xml:space="preserve">
     <value>ファイル数がアーカイブの上限を超えています。</value>
-    <comment>Number of files exceedes archive limit.</comment>
+    <comment>Number of files exceeds archive limit.</comment>
   </data>
   <data name="MsgUpdatingIndex" xml:space="preserve">
     <value>インデックスの更新中...</value>

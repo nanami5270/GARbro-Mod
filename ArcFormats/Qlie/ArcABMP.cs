@@ -1,6 +1,6 @@
 //! \file       ArcABMP.cs
 //! \date       Wed Oct 28 02:51:46 2015
-//! \brief      QLIE mulit-frame images.
+//! \brief      QLIE multi-frame images.
 //
 // Copyright (C) 2015-2017 by morkt
 //

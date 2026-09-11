@@ -338,7 +338,7 @@ namespace GameRes.Formats.KiriKiri
                     // two most significant bits of bitlength are
                     // entropy coding method;
                     // 00 means Golomb method,
-                    // 01 means Gamma method (not yet suppoted),
+                    // 01 means Gamma method (not yet supported),
                     // 10 means modified LZSS method (not yet supported),
                     // 11 means raw (uncompressed) data (not yet supported).
 
@@ -838,7 +838,7 @@ namespace GameRes.Formats.KiriKiri
             static void TVPTLG6InitLeadingZeroTable ()
             {
                 /* table which indicates first set bit position + 1. */
-                /* this may be replaced by BSF (IA32 instrcution). */
+                /* this may be replaced by BSF (IA32 instruction). */
 
                 for (int i = 0; i < TVP_TLG6_LeadingZeroTable_SIZE; i++)
                 {
@@ -863,7 +863,7 @@ namespace GameRes.Formats.KiriKiri
                             TVPTLG6GolombBitLengthTable[a++,n] = (sbyte)i;
                     }
                     if(a != TVP_TLG6_GOLOMB_N_COUNT*2*128)
-                        throw new Exception ("Invalid data initialization");   /* THIS MUST NOT BE EXECUETED! */
+                        throw new Exception ("Invalid data initialization");   /* THIS MUST NOT BE EXECUTED! */
                             /* (this is for compressed table data check) */
                 }
             }
@@ -876,7 +876,7 @@ namespace GameRes.Formats.KiriKiri
                 values are coded using golomb code.
 
                 "ForFirst" function do dword access to pixelbuf,
-                clearing with zero except for blue (least siginificant byte).
+                clearing with zero except for blue (least significant byte).
             */
             int bit_pool_index = 0;
 
@@ -921,7 +921,7 @@ namespace GameRes.Formats.KiriKiri
                 {
                     /* zero values */
 
-                    /* fill distination with zero */
+                    /* fill destination with zero */
                     do { pixelbuf[pixel++] = 0; } while (0 != --count);
 
                     zero = !zero;
@@ -930,7 +930,7 @@ namespace GameRes.Formats.KiriKiri
                 {
                     /* non-zero values */
 
-                    /* fill distination with glomb code */
+                    /* fill destination with golomb code */
 
                     do
                     {
@@ -1037,7 +1037,7 @@ namespace GameRes.Formats.KiriKiri
                 {
                     /* zero values */
 
-                    /* fill distination with zero */
+                    /* fill destination with zero */
                     do { pixelbuf[pixel++] &= mask; } while (0 != --count);
 
                     zero = !zero;
@@ -1046,7 +1046,7 @@ namespace GameRes.Formats.KiriKiri
                 {
                     /* non-zero values */
 
-                    /* fill distination with glomb code */
+                    /* fill destination with golomb code */
 
                     do
                     {

@@ -237,7 +237,7 @@ namespace GameRes.Formats.Circus
                     int line = 0;
                     for (int h = 0; h < m_height; h++)
                     {
-                        for (int w = 0;	w < m_width; w++)
+                        for (int w = 0; w < m_width; w++)
                         {
                             int pixel = line + w * 4;
                             var alpha = m_output[pixel];

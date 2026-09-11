@@ -73,6 +73,10 @@
       <Project>{453c087f-e416-4ae9-8c03-d8760da0574b}</Project>
       <Name>GameRes</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Legacy\Legacy.csproj">
+      <Project>{c79e82a8-8d32-485d-8442-2d4f71fbb5d5}</Project>
+      <Name>GameRes</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

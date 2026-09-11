@@ -182,6 +182,8 @@
     <Compile Include="Entergram\QuickLZ.cs" />
     <Compile Include="FrontierWorks\ArcPCARC.cs" />
     <Compile Include="Artemis\ImageNekoPNG.cs" />
+    <Compile Include="ComicPlayer\ArcCP3.cs" />
+    <Compile Include="ComicPlayer\ArcCPF.cs" />
     <Compile Include="CsWare\AudioWAV.cs" />
     <Compile Include="CsWare\ImageGDT.cs" />
     <Compile Include="Cyberworks\ArcDATA.cs" />
@@ -205,7 +207,6 @@
     <Compile Include="GScripter\ArcDATA.cs" />
     <Compile Include="Guyzware\ArcDat.cs" />
     <Compile Include="ImageKTX.cs" />
-    <Compile Include="ImageRCG.cs" />
     <Compile Include="Ism\ImagePNG.cs" />
     <Compile Include="Kid\ArcDATRAW.cs" />
     <Compile Include="Kid\ArcKLZ.cs" />
@@ -229,6 +230,10 @@
     <Compile Include="Hypatia\ArcLPK.cs" />
     <Compile Include="Hypatia\ImageLSG.cs" />
     <Compile Include="Illusion\ArcPP.cs" />
+    <Compile Include="Illusion\ImageEMA.cs" />
+    <Compile Include="Illusion\WidgetPP.xaml.cs">
+      <DependentUpon>WidgetPP.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Interheart\ImageBMP.cs" />
     <Compile Include="Interheart\ImageHMP.cs" />
     <Compile Include="CatSystem\ArcZT.cs" />
@@ -259,6 +264,7 @@
     <Compile Include="Leaf\LeafCompression.cs" />
     <Compile Include="Leaf\LeafVideo.cs" />
     <Compile Include="LightVN\ArcMCDAT.cs" />
+    <Compile Include="LightVN\ArcVNDAT.cs" />
     <Compile Include="Macintosh\ImagePICT.cs" />
     <Compile Include="Macromedia\ArcDXR.cs" />
     <Compile Include="Macromedia\AudioSND.cs" />
@@ -335,6 +341,7 @@
     <Compile Include="Cyberworks\ArcP8.cs" />
     <Compile Include="Cyberworks\ImageTB1.cs" />
     <Compile Include="DaiSystem\ArcPAC.cs" />
+    <Compile Include="DeepBlue\ArcAC.cs" />
     <Compile Include="DigitalWorks\ArcBIN.cs" />
     <Compile Include="DigitalWorks\ArcPAC.cs" />
     <Compile Include="DigitalWorks\ImageTM2.cs" />
@@ -515,6 +522,7 @@
     <Compile Include="Seraphim\ImageCP3.cs" />
     <Compile Include="ShiinaRio\ArcWARC1.0.cs" />
     <Compile Include="ShiinaRio\ImageCHD.cs" />
+    <Compile Include="SideB\ArcDAT.cs" />
     <Compile Include="Slg\ImageTIM.cs" />
     <Compile Include="Software House Parsley\ArcCG2.cs" />
     <Compile Include="Software House Parsley\ArcPAC.cs" />
@@ -1281,6 +1289,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="FC01\WidgetMCG.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Illusion\WidgetPP.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -396,7 +396,7 @@ namespace GameRes.Formats.BGI
 
         public int NextKey ()
         {
-	        uint v = (uint)((m_key * 127 >> 7) + m_key * 83 + 53) ^ 0xB97A7E5C;
+            uint v = (uint)((m_key * 127 >> 7) + m_key * 83 + 53) ^ 0xB97A7E5C;
             m_key = (int)Binary.RotR (v, 16);
             return m_key;
         }

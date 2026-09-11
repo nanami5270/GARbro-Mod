@@ -126,12 +126,12 @@ namespace GameRes.Formats.NitroPlus
             int key2 = file.View.ReadInt32 (11);
             bool compressed = 0 != file.View.ReadByte (15);
             bool encrypted  = 0 != file.View.ReadByte (16);
-    		int total_count = file.View.ReadInt32 (17);
-		    int folder_count = file.View.ReadInt32 (21);
-		    int file_count = file.View.ReadInt32 (25);
+            int total_count = file.View.ReadInt32 (17);
+            int folder_count = file.View.ReadInt32 (21);
+            int file_count = file.View.ReadInt32 (25);
             if (total_count < folder_count + file_count)
                 return null;
-		    uint dir_size = file.View.ReadUInt32 (37);
+            uint dir_size = file.View.ReadUInt32 (37);
             if (dir_size >= file.MaxOffset)
                 return null;
 

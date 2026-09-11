@@ -873,5 +873,17 @@ namespace GameRes.Formats.Properties {
                 this["SCENETitle"] = value;
             }
         }
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string PPTitle {
+            get {
+                return ((string)(this["PPTitle"]));
+            }
+            set {
+                this["PPTitle"] = value;
+            }
+        }
     }
 }
