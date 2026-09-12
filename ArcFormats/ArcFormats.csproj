@@ -513,6 +513,7 @@
     <Compile Include="Lilim\ArcFGA.cs" />
     <Compile Include="ScenePlayer\ArcPMA.cs" />
     <Compile Include="ScenePlayer\ArcPMX.cs" />
+    <Compile Include="Scoop\ArcAPG.cs" />
     <Compile Include="Scoop\ArcGX.cs" />
     <Compile Include="Scoop\ImageSCP.cs" />
     <Compile Include="Seraphim\ArcArchAngel.cs" />
@@ -804,10 +805,13 @@
     <Compile Include="Succubus\ArcARC.cs" />
     <Compile Include="Succubus\ImageGH.cs" />
     <Compile Include="SuperNekoX\ArcGPC.cs" />
+    <Compile Include="Sviu\ArcKLZ.cs" />
     <Compile Include="Sviu\ArcPKZ.cs" />
     <Compile Include="Sviu\AudioKOG.cs" />
     <Compile Include="Sviu\ImageGBP.cs" />
     <Compile Include="Sviu\ImageJBP.cs" />
+    <Compile Include="Sviu\ImageKBP.cs" />
+    <Compile Include="Sviu\VideoMOV.cs" />
     <Compile Include="SysD\ArcDPK.cs" />
     <Compile Include="SysD\AudioDWV.cs" />
     <Compile Include="SysD\ImageDBM.cs" />
