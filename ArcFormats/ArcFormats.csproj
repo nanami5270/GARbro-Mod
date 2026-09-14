@@ -769,6 +769,7 @@
     <Compile Include="Cmvs\ImagePB3.cs" />
     <Compile Include="CsWare\ArcPCS.cs" />
     <Compile Include="DenSDK\ArcDAF.cs" />
+    <Compile Include="Dvn\ArcDVN.cs" />
     <Compile Include="elf\ArcVSD.cs" />
     <Compile Include="Entis\ErisaNemesis.cs" />
     <Compile Include="Escude\ArcBIN.cs" />
