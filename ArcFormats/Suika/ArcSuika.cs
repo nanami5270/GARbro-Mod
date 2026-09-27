@@ -83,6 +83,8 @@ namespace GameRes.Formats.Suika
                 for (int i = 0; i < (int)count; i++)
                 {
                     var name = file.View.ReadString (index_offset, 0x100);
+                    if (string.IsNullOrEmpty (name))
+                        return null;
                     var entry = Create<ArcEntry> (name);
                     entry.Size = (uint)file.View.ReadInt64 (index_offset + 0x100);
                     entry.Offset = file.View.ReadInt64 (index_offset + 0x108);
@@ -107,6 +109,8 @@ namespace GameRes.Formats.Suika
                 for (int j = 0; j < name_buffer.Length; j++)
                     name_buffer[j] ^= rnd.Rand();
                 var name = Binary.GetCString (name_buffer, 0, Encoding.UTF8); // XXX may not throw exception on invalid strings
+                if (string.IsNullOrEmpty (name))
+                    throw new InvalidFormatException();
                 var entry = Create<ArcEntry> (name);
                 entry.Size = (uint)file.View.ReadInt64 (index_offset + 0x100);
                 entry.Offset = file.View.ReadInt64 (index_offset + 0x108);

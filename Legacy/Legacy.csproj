@@ -120,7 +120,6 @@
     <Compile Include="Bom\ImageGRP.cs" />
     <Compile Include="Broccoli\ArcP00.cs" />
     <Compile Include="Broccoli\BroccoliGrp.cs" />
-    <Compile Include="Broccoli\BroccoliMpeg.cs" />
     <Compile Include="Broccoli\BroccoliPak.cs" />
     <Compile Include="CottonClub\ImageLMG.cs" />
     <Compile Include="Desire\ArcDSV.cs" />
@@ -200,6 +199,9 @@
     <Compile Include="Omi\ArcDAT.cs" />
     <Compile Include="Paprika\ArcPKDAT.cs" />
     <Compile Include="Paprika\ImageNP.cs" />
+    <Compile Include="Peach\ArcDAT.cs" />
+    <Compile Include="Peach\ArcNIJI.cs" />
+    <Compile Include="Peach\ArcPAK.cs" />
     <Compile Include="Pearl\ArcARY.cs" />
     <Compile Include="Pearl\ImagePL4.cs" />
     <Compile Include="PenguinWorks\ArcDAT.cs" />

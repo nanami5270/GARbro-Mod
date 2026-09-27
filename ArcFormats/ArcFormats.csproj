@@ -224,6 +224,7 @@
     <Compile Include="BlueGale\ImageBBM.cs" />
     <Compile Include="ClickTeam\ArcMF.cs" />
     <Compile Include="DxLib\ArcDX8.cs" />
+    <Compile Include="Hecate\ArcDAT.cs" />
     <Compile Include="HuneX\ArcHFA.cs" />
     <Compile Include="HuneX\ArcMZP.cs" />
     <Compile Include="HuneX\Decoder.cs" />
@@ -262,8 +263,8 @@
     <Compile Include="ArcARCX.cs" />
     <Compile Include="ArcASAR.cs" />
     <Compile Include="Artemis\ArcMJA.cs" />
+    <Compile Include="GenericVideo.cs" />
     <Compile Include="Leaf\LeafCompression.cs" />
-    <Compile Include="Leaf\LeafVideo.cs" />
     <Compile Include="LightVN\ArcMCDAT.cs" />
     <Compile Include="LightVN\ArcVNDAT.cs" />
     <Compile Include="Macintosh\ImagePICT.cs" />
@@ -547,7 +548,6 @@
     <Compile Include="StudioJikkenshitsu\WidgetSJDAT.xaml.cs">
       <DependentUpon>WidgetSJDAT.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StudioSakura\ArcDAT.cs" />
     <Compile Include="Silky\ImageGRD.cs" />
     <Compile Include="Slg\ArcSPD.cs" />
     <Compile Include="SoftwareHouseParsley\ArcCG.cs" />
@@ -810,6 +810,7 @@
     <Compile Include="Sviu\ArcKLZ.cs" />
     <Compile Include="Sviu\ArcPKZ.cs" />
     <Compile Include="Sviu\AudioKOG.cs" />
+    <Compile Include="Sviu\AudioKPV.cs" />
     <Compile Include="Sviu\ImageGBP.cs" />
     <Compile Include="Sviu\ImageJBP.cs" />
     <Compile Include="Sviu\ImageKBP.cs" />
@@ -1081,6 +1082,7 @@
     <Compile Include="Liar\ArcXFL.cs" />
     <Compile Include="KiriKiri\ArcXP3.cs" />
     <Compile Include="YuRis\ArcYPF.cs" />
+    <Compile Include="YuukiNovel\ArcYuuki.cs" />
     <Compile Include="MOONSTONE\ArcPAK.cs" />
     <Compile Include="Macromedia\AudioEDIM.cs" />
     <Compile Include="Crowd\AudioEOG.cs" />

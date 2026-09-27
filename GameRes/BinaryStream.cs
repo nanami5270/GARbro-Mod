@@ -328,8 +328,10 @@ namespace GameRes
         public string ReadCString (int length, Encoding enc)
         {
             length = FillBuffer (length);
-            int i = FindEoS(m_buffer_pos, length, enc) - m_buffer_pos;
-            string s = enc.GetString (m_buffer, m_buffer_pos, i);
+            int eos_pos = FindEoS (m_buffer_pos, length, enc);
+            if (-1 == eos_pos)
+                eos_pos = m_buffer_pos+length;
+            string s = enc.GetString (m_buffer, m_buffer_pos, eos_pos-m_buffer_pos);
             m_buffer_pos += length;
             return s;
         }
