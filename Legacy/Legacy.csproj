@@ -120,7 +120,6 @@
     <Compile Include="Bom\ImageGRP.cs" />
     <Compile Include="Broccoli\ArcP00.cs" />
     <Compile Include="Broccoli\BroccoliGrp.cs" />
-    <Compile Include="Broccoli\BroccoliPak.cs" />
     <Compile Include="Broccoli\ImageT32.cs" />
     <Compile Include="Broccoli\ImageTbm.cs" />
     <Compile Include="Broccoli\PakVideoDecrypt.cs" />
