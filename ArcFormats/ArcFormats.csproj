@@ -416,6 +416,7 @@
     <Compile Include="Leaf\AudioP16.cs" />
     <Compile Include="Leaf\ImageBJR.cs" />
     <Compile Include="Leaf\ImageLFG.cs" />
+    <Compile Include="Leaf\ImageLFB.cs" />
     <Compile Include="Leaf\WidgetLEAF.xaml.cs">
       <DependentUpon>WidgetLEAF.xaml</DependentUpon>
     </Compile>
