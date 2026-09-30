@@ -163,6 +163,7 @@
     <Compile Include="Abogado\ImageKG.cs" />
     <Compile Include="Actgs\ArcCG.cs" />
     <Compile Include="Actgs\ArcDAT.cs" />
+    <Compile Include="Actgs\ImagePB6.cs" />
     <Compile Include="Adobe\ArcAIR.cs" />
     <Compile Include="Ads\ArcPAC.cs" />
     <Compile Include="AdvDx\ArcPKD.cs" />
