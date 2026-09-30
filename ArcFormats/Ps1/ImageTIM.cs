@@ -25,7 +25,6 @@ using System;
 using System.ComponentModel.Composition;
 using System.IO;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
 
 namespace GameRes.Formats.Sony
 {
@@ -99,75 +98,99 @@ namespace GameRes.Formats.Sony
         public override ImageData Read(IBinaryStream stream, ImageMetaData info)
         {
             var meta = (TimMetaData)info;
-            BitmapPalette palette = null;
+            int width = (int)meta.Width;
+            int height = (int)meta.Height;
+            int rowSize = GetRowSize (meta.BppMode, width);
 
+            // CLUT is decoded into raw 16-bit words; missing entries read as black.
+            var colors = new ushort[256];
             if (meta.HasClut)
             {
                 // CLUT Header: BlockSize(4), X(2), Y(2), Width(2), Height(2)
                 // Width/Height are at offsets 8 and 10 within the CLUT block.
                 stream.Position = meta.ClutOffset + 8;
-                ushort colorsCount = stream.ReadUInt16();
-                ushort rows = stream.ReadUInt16();
-                int totalColors = colorsCount * rows;
-
-                // Color data starts at offset 12
-                var colorData = stream.ReadBytes(totalColors * 2);
-                var colors = new Color[totalColors];
-                for (int i = 0; i < totalColors; i++)
-                {
-                    ushort c = BitConverter.ToUInt16(colorData, i * 2);
-                    colors[i] = ConvertBgr1555(c);
-                }
-                palette = new BitmapPalette(colors);
+                long totalColors = (long)stream.ReadUInt16() * stream.ReadUInt16();
+                if (totalColors < 1 || totalColors > 256)
+                    throw new InvalidFormatException();
+                for (int i = 0; i < totalColors; ++i)
+                    colors[i] = stream.ReadUInt16();
             }
-
             // Image data starts at ImageOffset + 12 (skipping the 12-byte header)
             stream.Position = meta.ImageOffset + 12;
-            int pixelDataSize = (int)(meta.Width * meta.Height * meta.BPP / 8);
-            if (meta.BPP == 4) pixelDataSize = (int)(meta.Width * meta.Height / 2);
-
-            var pixels = stream.ReadBytes(pixelDataSize);
-            PixelFormat format;
-
-            switch (meta.BppMode)
+            var pixels = new byte[width * height * 4];
+            int dst = 0;
+            for (int y = 0; y < height; ++y)
             {
-                case 0: format = PixelFormats.Indexed4; break;
-                case 1: format = PixelFormats.Indexed8; break;
-                case 2: format = PixelFormats.Bgr555; break;
-                case 3: format = PixelFormats.Bgr24; break;
-                default: throw new NotSupportedException("Unsupported TIM mode");
-            }
-
-            // PS1 4bpp nibbles are stored in reverse order compared to Windows standard
-            if (meta.BppMode == 0)
-            {
-                for (int i = 0; i < pixels.Length; i++)
+                var row = stream.ReadBytes (rowSize);
+                if (row.Length != rowSize)
+                    throw new InvalidFormatException();
+                switch (meta.BppMode)
                 {
-                    byte b = pixels[i];
-                    pixels[i] = (byte)((b >> 4) | (b << 4));
+                    case 0: // 4bpp, left pixel in the low nibble
+                        for (int x = 0; x < width; ++x)
+                        {
+                            byte b = row[x >> 1];
+                            int index = 0 == (x & 1) ? b & 0x0F : (b >> 4) & 0x0F;
+                            WritePixel (pixels, ref dst, colors[index]);
+                        }
+                        break;
+                    case 1: // 8bpp
+                        for (int x = 0; x < width; ++x)
+                            WritePixel (pixels, ref dst, colors[row[x]]);
+                        break;
+                    case 2: // 16bpp
+                        for (int x = 0; x < width; ++x)
+                        {
+                            ushort c = (ushort)(row[x*2] | row[x*2+1] << 8);
+                            WritePixel (pixels, ref dst, c);
+                        }
+                        break;
+                    default: // 24bpp, stored as RGB triplets
+                        for (int x = 0; x < width; ++x, dst += 4)
+                        {
+                            int src = x * 3;
+                            pixels[dst+0] = row[src+2];
+                            pixels[dst+1] = row[src+1];
+                            pixels[dst+2] = row[src+0];
+                            pixels[dst+3] = 255;
+                        }
+                        break;
                 }
             }
+            return ImageData.Create (info, PixelFormats.Bgra32, null, pixels);
+        }
 
-            return ImageData.Create(info, format, palette, pixels);
+        // PS1 16-bit color: bit 15=STP, 14-10=B, 9-5=G, 4-0=R;
+        // black (0,0,0) is used as a transparent colour key.
+        static void WritePixel (byte[] dst, ref int pos, ushort c)
+        {
+            dst[pos+0] = Expand5to8 ((c >> 10) & 0x1F);
+            dst[pos+1] = Expand5to8 ((c >> 5) & 0x1F);
+            dst[pos+2] = Expand5to8 (c & 0x1F);
+            dst[pos+3] = 0 == c ? (byte)0 : (byte)255;
+            pos += 4;
+        }
+
+        static byte Expand5to8 (int v)
+        {
+            return (byte)((v << 3) | (v >> 2));
+        }
+
+        // Rows are padded to 16-bit word boundaries (stored pixel word width).
+        static int GetRowSize (uint mode, int width)
+        {
+            switch (mode)
+            {
+                case 0: return ((width + 3) / 4) * 2;
+                case 1: return ((width + 1) / 2) * 2;
+                case 2: return width * 2;
+                default: return ((width * 3 + 1) / 2) * 2;
+            }
         }
 
         public override void Write(Stream file, ImageData image)
         {
             throw new NotImplementedException();
-        }
-
-        private Color ConvertBgr1555(ushort c)
-        {
-            // PS1 BGR1555: Bit 15=STP, 14-10=B, 9-5=G, 4-0=R
-            byte r = (byte)((c & 0x1F) << 3);
-            byte g = (byte)(((c >> 5) & 0x1F) << 3);
-            byte b = (byte)(((c >> 10) & 0x1F) << 3);
-
-            // Transparency logic: 0,0,0 is transparent unless STP bit is set.
-            byte a = (c == 0) ? (byte)0 : (byte)255;
-            if ((c & 0x8000) != 0) a = 255;
-
-            return Color.FromArgb(a, r, g, b);
         }
     }
 }
