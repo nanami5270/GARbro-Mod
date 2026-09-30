@@ -190,6 +190,9 @@
     <Compile Include="Mink\ImageFC.cs" />
     <Compile Include="Mink\ImageFD.cs" />
     <Compile Include="Mmfass\ArcSDA.cs" />
+    <Compile Include="NAUTS\ArcDPK.cs" />
+    <Compile Include="NAUTS\ArcMSP.cs" />
+    <Compile Include="NAUTS\ArcTTP.cs" />
     <Compile Include="Nekotaro\ImageNCG.cs" />
     <Compile Include="Neon\ArcAR2.cs" />
     <Compile Include="Pias\EncryptedGraphDat.cs" />
