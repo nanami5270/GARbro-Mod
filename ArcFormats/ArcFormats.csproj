@@ -182,6 +182,7 @@
     <Compile Include="Entergram\QuickLZ.cs" />
     <Compile Include="FrontierWorks\ArcPCARC.cs" />
     <Compile Include="Artemis\ImageNekoPNG.cs" />
+    <Compile Include="Artemis\ImageIPG.cs" />
     <Compile Include="ComicPlayer\ArcCP3.cs" />
     <Compile Include="ComicPlayer\ArcCPF.cs" />
     <Compile Include="CsWare\AudioWAV.cs" />
