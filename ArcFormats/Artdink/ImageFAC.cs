@@ -1,5 +1,26 @@
 //! \file       ImageFAC.cs
+//! \date       2026-09-30
 //! \brief      Artdink PS2 FAC image format.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 // A fixed 16-byte pattern marks the header end; 8bpp pixels follow, with a
 // 256-color PS2 CLUT right after them.
@@ -44,8 +65,8 @@ namespace GameRes.Formats.Artdink
             if (header_offset < 0)
                 return null;
             file.Position = header_offset + 0x38;
-            uint width  = file.ReadUInt16();
-            uint height = file.ReadUInt16();
+            uint width  = file.ReadUInt16 ();
+            uint height = file.ReadUInt16 ();
             if (0 == width || 0 == height || width > 16384 || height > 16384)
                 return null;
             long pixel_offset = pattern_offset + 16;
@@ -67,12 +88,12 @@ namespace GameRes.Formats.Artdink
             file.Position = meta.PaletteOffset;
             var raw_pal = file.ReadBytes (0x400);
             if (raw_pal.Length < 0x400)
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             var palette = Ps2ImageUtil.BuildPs2Palette256 (raw_pal);
             file.Position = meta.PixelOffset;
             var src = file.ReadBytes (width * height);
             if (src.Length < width * height)
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             var pixels = new byte[width * height * 4];
             for (int y = 0; y < height; ++y)
                 Ps2ImageUtil.ConvertRow8 (src, y * width, pixels, y * width * 4, width, palette);

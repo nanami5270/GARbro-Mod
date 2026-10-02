@@ -1,5 +1,26 @@
 //! \file       ImageAGI.cs
+//! \date       2026-09-30
 //! \brief      Artdink PS2 AGI texture format.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 // A container of 20-byte texture descriptors followed by palette descriptors;
 // pixel storage follows the PS2 GS pixel modes (psm byte at descriptor +6).
@@ -36,8 +57,8 @@ namespace GameRes.Formats.Artdink
             if (file.Length < 8 + 20)
                 return null;
             file.Position = 4;
-            uint image_count = file.ReadUInt16();
-            uint clut_count  = file.ReadUInt16();
+            uint image_count = file.ReadUInt16 ();
+            uint clut_count  = file.ReadUInt16 ();
             if (0 == image_count)
                 return null;
             file.Position = 8;
@@ -106,7 +127,7 @@ namespace GameRes.Formats.Artdink
                 file.Position = meta.PaletteOffset;
                 var raw_pal = file.ReadBytes (0x400);
                 if (raw_pal.Length < 0x400)
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 palette = Ps2ImageUtil.BuildPs2Palette256 (raw_pal);
             }
             else if (4 == meta.PixelMode)
@@ -114,7 +135,7 @@ namespace GameRes.Formats.Artdink
                 file.Position = meta.PaletteOffset;
                 var raw_pal = file.ReadBytes (0x40);
                 if (raw_pal.Length < 0x40)
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 palette = Ps2ImageUtil.BuildPalette (raw_pal, 16, true);
             }
             int row_size;
@@ -128,7 +149,7 @@ namespace GameRes.Formats.Artdink
             file.Position = meta.TextureOffset;
             var src = file.ReadBytes (row_size * height);
             if (src.Length < row_size * height)
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             var pixels = new byte[width * height * 4];
             for (int y = 0; y < height; ++y)
             {

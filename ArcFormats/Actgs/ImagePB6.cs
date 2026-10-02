@@ -1,5 +1,26 @@
 //! \file       ImagePB6.cs
+//! \date       2026-09-30
 //! \brief      ACTGS engine PB6 image format.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 
 using System;
@@ -37,11 +58,11 @@ namespace GameRes.Formats.Actgs
             if (magic.Length < 3 || magic[0] != 'P' || magic[1] != 'B' || magic[2] != '6')
                 return null;
             file.Position = 18;
-            int width  = file.ReadUInt16();
+            int width  = file.ReadUInt16 ();
             file.Position = 22;
-            int height = file.ReadUInt16();
+            int height = file.ReadUInt16 ();
             file.Position = 28;
-            int bpp    = file.ReadUInt16();
+            int bpp    = file.ReadUInt16 ();
             if (width <= 0 || height <= 0 || width > 16384 || height > 16384)
                 return null;
             if (8 != bpp && 24 != bpp && 32 != bpp)
@@ -65,7 +86,7 @@ namespace GameRes.Formats.Actgs
             if (8 == meta.BPP)
             {
                 if (meta.DataOffset + decoded_size > file.Length)
-                    throw new EndOfStreamException();
+                    throw new EndOfStreamException ();
                 pixels = file.ReadBytes (decoded_size);
             }
             else
@@ -133,12 +154,12 @@ namespace GameRes.Formats.Actgs
             int dst = 0;
             while (dst < output.Length)
             {
-                int control = input.ReadByte();
+                int control = input.ReadByte ();
                 if (control < 0)
                     break;
                 int count = control & 0x7F;
                 if (0 == count)
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 int take = Math.Min (count, (output.Length - dst) / pixel_size);
                 if (0 != (control & 0x80))
                 {

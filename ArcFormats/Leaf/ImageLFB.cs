@@ -1,5 +1,26 @@
 //! \file       ImageLFB.cs
+//! \date       2026-09-30
 //! \brief      Leaf LFB/LCF/LFF image formats (To Heart PSE).
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 
 using System;
@@ -36,7 +57,7 @@ namespace GameRes.Formats.Leaf
         {
             if (file.Length < 5)
                 return null;
-            int output_size = file.ReadInt32();
+            int output_size = file.ReadInt32 ();
             if (output_size <= 0 || output_size > 0x4000000)
                 return null;
             file.Position = 4;
@@ -60,9 +81,9 @@ namespace GameRes.Formats.Leaf
             file.Position = 4;
             byte[] bmp_bytes;
             if (!LeafLzs.Decompress (file.ReadBytes ((int)(file.Length-4)), meta.OutputSize, out bmp_bytes))
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             if (bmp_bytes.Length < 2 || bmp_bytes[0] != 'B' || bmp_bytes[1] != 'M')
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             var image = TryDecodeIndexedAlpha (bmp_bytes, meta) ?? TryDecodeLeaf32 (bmp_bytes, meta);
             if (null != image)
                 return image;
@@ -72,7 +93,7 @@ namespace GameRes.Formats.Leaf
                 if (null != fallback)
                     return fallback;
             }
-            throw new InvalidFormatException();
+            throw new InvalidFormatException ();
         }
 
         static bool GetBmpDimensions (byte[] bmp, out int width, out int height)
@@ -230,7 +251,7 @@ namespace GameRes.Formats.Leaf
             file.Position = 24;
             byte[] src;
             if (!LeafLzs.Decompress (file.ReadBytes ((int)(file.Length-24)), meta.UnpackedSize, out src))
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             // every pixel starts with a control byte: 0 = transparent, otherwise
             // BGR follow with alpha (0xFF = opaque); rows are stored bottom-up.
             var pixels = new byte[width*height*4];
@@ -242,12 +263,12 @@ namespace GameRes.Formats.Leaf
                 {
                     int d = dst + x*4;
                     if (src_pos >= src.Length)
-                        throw new InvalidFormatException();
+                        throw new InvalidFormatException ();
                     byte control = src[src_pos++];
                     if (0 == control)
                         continue;   // pixels[] is zero-initialized, stays transparent
                     if (src_pos + 3 > src.Length)
-                        throw new InvalidFormatException();
+                        throw new InvalidFormatException ();
                     byte b = src[src_pos++];
                     byte g = src[src_pos++];
                     byte r = src[src_pos++];
@@ -317,7 +338,7 @@ namespace GameRes.Formats.Leaf
             byte[] src;
             if (!LeafLzs.Decompress (file.ReadBytes ((int)(file.Length-meta.DataOffset)),
                                      row_size*height, out src))
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             // 24bpp BGR rows, stored bottom-up.
             var pixels = new byte[width*height*4];
             for (int src_y = 0; src_y < height; ++src_y)

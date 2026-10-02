@@ -277,7 +277,7 @@ namespace GameRes.Formats.Gs
             using (var stream = new MemoryStream (packed_index))
             using (var reader = new LzssReader (stream, packed_index.Length, count * 0x28))
             {
-                reader.Unpack();
+                reader.Unpack ();
                 index = reader.Data;
             }
             var dir = new List<Entry> (count);

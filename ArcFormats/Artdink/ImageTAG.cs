@@ -1,5 +1,26 @@
 //! \file       ImageTAG.cs
+//! \date       2026-09-30
 //! \brief      Artdink PS2 TAG image format.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 // PS2 GIF transfer packets describe a stack of 4/8bpp images; the decoded
 // images are composed vertically into a single bitmap.
@@ -71,7 +92,7 @@ namespace GameRes.Formats.Artdink
                 height += image.Height;
                 bpp = Math.Max (bpp, 256 == image.ColorCount ? 8 : 4);
             }
-            if (0 == width || height > 65535)
+            if (0 == width || height > 65535 || width*height*4 > int.MaxValue)
                 return null;
             return new TagMetaData {
                 Width = (uint)width, Height = (uint)height, BPP = bpp, Images = images,
@@ -123,8 +144,8 @@ namespace GameRes.Formats.Artdink
 
         static List<TagImage> ParseImages (byte[] data)
         {
-            var events = new List<TransferEvent>();
-            var seen = new HashSet<int>();
+            var events = new List<TransferEvent> ();
+            var seen = new HashSet<int> ();
             int packet_width = 0;
             int packet_height = 0;
 
@@ -168,24 +189,24 @@ namespace GameRes.Formats.Artdink
 
             Walk ((int)LittleEndian.ToUInt32 (data, 4));
 
-            var images = new List<TagImage>();
+            var images = new List<TagImage> ();
             for (int i = 0; i + 1 < events.Count; i += 2)
             {
                 var pal = events[i];
                 var pix = events[i+1];
                 if (pal.Width <= 0 || pal.Height <= 0 || pix.Width <= 0 || pix.Height <= 0)
-                    return new List<TagImage>();
+                    return new List<TagImage> ();
                 long colors = (long)pal.Width * pal.Height;
                 if (16 != colors && 256 != colors)
-                    return new List<TagImage>();
+                    return new List<TagImage> ();
                 int bpp = 16 == colors ? 4 : 8;
                 long needed = (long)pix.Width * pix.Height * bpp / 8;
                 if (pal.Size != colors * 4 || Math.Abs (pix.Size - needed) > 16)
-                    return new List<TagImage>();
+                    return new List<TagImage> ();
                 if (pal.Offset < 0 || pal.Offset + colors * 4 > data.Length)
-                    return new List<TagImage>();
+                    return new List<TagImage> ();
                 if (pix.Offset < 0 || pix.Offset > data.Length)
-                    return new List<TagImage>();
+                    return new List<TagImage> ();
                 images.Add (new TagImage {
                     PaletteOffset = pal.Offset,
                     ColorCount = (int)colors,

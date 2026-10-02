@@ -86,7 +86,7 @@ namespace GameRes.Formats.Nauts
                 entry.Width = width;
                 entry.Height = height;
                 long pos = data_offset;
-                var first = new TtpBlock();
+                var first = new TtpBlock ();
                 if (!ReadBlock (file, ref pos, first))
                     return null;
                 var image = first;
@@ -94,7 +94,7 @@ namespace GameRes.Formats.Nauts
                 uint mode = InferMode (width, height, first);
                 if (2 != mode)
                 {
-                    var second = new TtpBlock();
+                    var second = new TtpBlock ();
                     if (!ReadBlock (file, ref pos, second))
                         return null;
                     uint second_mode = InferMode (width, height, second);
@@ -124,7 +124,7 @@ namespace GameRes.Formats.Nauts
         public override Stream OpenEntry (ArcFile arc, Entry entry)
         {
             var tent = (TtpEntry)entry;
-            var output = new MemoryStream();
+            var output = new MemoryStream ();
             using (var writer = new BinaryWriter (output, System.Text.Encoding.ASCII, true))
             {
                 writer.Write (0x10u);

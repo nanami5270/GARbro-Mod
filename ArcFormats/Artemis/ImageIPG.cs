@@ -1,5 +1,26 @@
 //! \file       ImageIPG.cs
+//! \date       2026-09-30
 //! \brief      SALA ONE IPG image format.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 
 using System;
@@ -24,11 +45,12 @@ namespace GameRes.Formats.Artemis
         public override ImageMetaData ReadMetaData (IBinaryStream file)
         {
             file.Position = 4;
-            uint width  = file.ReadUInt32();
-            uint height = file.ReadUInt32();
+            uint width  = file.ReadUInt32 ();
+            uint height = file.ReadUInt32 ();
             if (0 == width || 0 == height || width > 0x10000 || height > 0x10000)
                 return null;
-            if (file.Length < 12 + (long)width*height*4)
+            long pixels_size = (long)width*height*4;
+            if (pixels_size > int.MaxValue || file.Length < 12 + pixels_size)
                 return null;
             return new ImageMetaData { Width = width, Height = height, BPP = 32 };
         }
@@ -44,7 +66,7 @@ namespace GameRes.Formats.Artemis
             {
                 int read = file.Read (pixels, total, pixels_size - total);
                 if (0 == read)
-                    throw new EndOfStreamException();
+                    throw new EndOfStreamException ();
                 total += read;
             }
             // source is RGBA, convert to BGRA in place

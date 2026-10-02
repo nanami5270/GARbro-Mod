@@ -135,8 +135,8 @@ namespace GameRes.Formats.Leaf
             var dir = new List<Entry> (count);
             for (int i = 0; i < count; ++i)
             {
-                var name = Binary.GetCString (index, index_pos, 8).TrimEnd();
-                var ext  = Binary.GetCString (index, index_pos+8, 3).TrimEnd();
+                var name = Binary.GetCString (index, index_pos, 8).TrimEnd ();
+                var ext  = Binary.GetCString (index, index_pos+8, 3).TrimEnd ();
                 if (!string.IsNullOrWhiteSpace (ext))
                     name = Path.ChangeExtension (name, ext);
                 if (string.IsNullOrWhiteSpace (name))

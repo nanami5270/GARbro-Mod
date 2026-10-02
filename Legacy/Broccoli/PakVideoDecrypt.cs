@@ -1,5 +1,26 @@
 //! \file       PakVideoDecrypt.cs
+//! \date       2026-09-30
 //! \brief      Ikusabune encrypted MPEG video (gadat*.pak).
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 // The first 0x10000 bytes of gadat*.pak are XOR-encrypted with a keystream seeded
 // from the file name, so the generic MPEG opener cannot read them.  Only those
@@ -54,80 +75,14 @@ namespace GameRes.Formats.Broccoli
 
         public override Stream OpenEntry (ArcFile arc, Entry entry)
         {
-            return new PakVideoDecryptStream (arc.File, Path.GetFileName (arc.File.Name));
-        }
-    }
-
-    /// <summary>
-    /// Serves the decrypted head (first 0x10000 bytes) followed by the untouched remainder.
-    /// </summary>
-    internal sealed class PakVideoDecryptStream : Stream
-    {
-        const int HeadSize = 0x10000;
-
-        readonly byte[] m_head;
-        readonly Stream m_tail;
-        int  m_head_pos;
-        long m_position;
-
-        public PakVideoDecryptStream (ArcView file, string seed_name)
-        {
-            long total = file.MaxOffset;
-            long head_len = Math.Min (total, HeadSize);
-            m_head = new byte[head_len];
-            using (var input = file.CreateStream (0, (uint)head_len))
-            {
-                int done = 0;
-                while (done < head_len)
-                {
-                    int read = input.Read (m_head, done, (int)head_len - done);
-                    if (read <= 0)
-                        break;
-                    done += read;
-                }
-            }
-            var cipher = new PakVideoCipher (PakVideoCipher.MakeFileId (seed_name));
-            cipher.Decrypt (m_head);
-            m_tail = total > head_len ? file.CreateStream (head_len, (uint)(total - head_len)) : Stream.Null;
-        }
-
-        public override int Read (byte[] buffer, int offset, int count)
-        {
-            if (count <= 0)
-                return 0;
-            if (m_head_pos < m_head.Length)
-            {
-                int n = Math.Min (count, m_head.Length - m_head_pos);
-                Buffer.BlockCopy (m_head, m_head_pos, buffer, offset, n);
-                m_head_pos += n;
-                m_position += n;
-                return n;
-            }
-            int result = m_tail.Read (buffer, offset, count);
-            if (result > 0)
-                m_position += result;
-            return result;
-        }
-
-        public override bool CanRead  { get { return true; } }
-        public override bool CanSeek  { get { return false; } }
-        public override bool CanWrite { get { return false; } }
-        public override long   Length { get { return m_head.Length + m_tail.Length; } }
-        public override long Position
-        {
-            get { return m_position; }
-            set { throw new NotSupportedException(); }
-        }
-        public override void Flush () { }
-        public override long Seek (long offset, SeekOrigin origin) { throw new NotSupportedException(); }
-        public override void SetLength (long value) { throw new NotSupportedException(); }
-        public override void Write (byte[] buffer, int offset, int count) { throw new NotSupportedException(); }
-
-        protected override void Dispose (bool disposing)
-        {
-            if (disposing && !ReferenceEquals (m_tail, Stream.Null))
-                m_tail.Dispose();
-            base.Dispose (disposing);
+            int head_size = (int)Math.Min (arc.File.MaxOffset, 0x10000);
+            var head = arc.File.View.ReadBytes (0, (uint)head_size);
+            if (head.Length != head_size)
+                throw new EndOfStreamException ();
+            var cipher = new PakVideoCipher (PakVideoCipher.MakeFileId (Path.GetFileName (arc.File.Name)));
+            cipher.Decrypt (head);
+            Stream tail = arc.File.MaxOffset > head_size ? arc.File.CreateStream (head_size) : Stream.Null;
+            return new PrefixStream (head, tail);
         }
     }
 
@@ -193,10 +148,10 @@ namespace GameRes.Formats.Broccoli
                 return;
             unchecked
             {
-                uint v = NextWord();
+                uint v = NextWord ();
                 for (int i = 0; i < limit; i += 4)
                 {
-                    v = 0 != (v & 1) ? 1103515245u * v + 12345u : NextWord();
+                    v = 0 != (v & 1) ? 1103515245u * v + 12345u : NextWord ();
                     data[i  ] ^= (byte)v;
                     data[i+1] ^= (byte)(v >> 8);
                     data[i+2] ^= (byte)(v >> 16);
@@ -210,7 +165,7 @@ namespace GameRes.Formats.Broccoli
             unchecked
             {
                 uint v2 = 0, v3 = 0;
-                foreach (var ch in name.ToLowerInvariant())
+                foreach (var ch in name.ToLowerInvariant ())
                 {
                     uint v = ch;
                     v3 += v;

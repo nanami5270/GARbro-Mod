@@ -100,7 +100,7 @@ namespace GameRes.Formats.Sony
             var meta = (TimMetaData)info;
             int width = (int)meta.Width;
             int height = (int)meta.Height;
-            int rowSize = GetRowSize (meta.BppMode, width);
+            int row_size = GetRowSize (meta.BppMode, width);
 
             // CLUT is decoded into raw 16-bit words; missing entries read as black.
             var colors = new ushort[256];
@@ -109,11 +109,11 @@ namespace GameRes.Formats.Sony
                 // CLUT Header: BlockSize(4), X(2), Y(2), Width(2), Height(2)
                 // Width/Height are at offsets 8 and 10 within the CLUT block.
                 stream.Position = meta.ClutOffset + 8;
-                long totalColors = (long)stream.ReadUInt16() * stream.ReadUInt16();
-                if (totalColors < 1 || totalColors > 256)
-                    throw new InvalidFormatException();
-                for (int i = 0; i < totalColors; ++i)
-                    colors[i] = stream.ReadUInt16();
+                long total_colors = (long)stream.ReadUInt16 () * stream.ReadUInt16 ();
+                if (total_colors < 1 || total_colors > 256)
+                    throw new InvalidFormatException ();
+                for (int i = 0; i < total_colors; ++i)
+                    colors[i] = stream.ReadUInt16 ();
             }
             // Image data starts at ImageOffset + 12 (skipping the 12-byte header)
             stream.Position = meta.ImageOffset + 12;
@@ -121,9 +121,9 @@ namespace GameRes.Formats.Sony
             int dst = 0;
             for (int y = 0; y < height; ++y)
             {
-                var row = stream.ReadBytes (rowSize);
-                if (row.Length != rowSize)
-                    throw new InvalidFormatException();
+                var row = stream.ReadBytes (row_size);
+                if (row.Length != row_size)
+                    throw new InvalidFormatException ();
                 switch (meta.BppMode)
                 {
                     case 0: // 4bpp, left pixel in the low nibble

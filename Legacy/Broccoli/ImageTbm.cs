@@ -1,5 +1,26 @@
 //! \file       ImageTbm.cs
+//! \date       2026-09-30
 //! \brief      Ikusabune TBM image format.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 
 using System;
@@ -33,7 +54,7 @@ namespace GameRes.Formats.Broccoli
 
         public override ImageMetaData ReadMetaData (IBinaryStream file)
         {
-            var header = file.ReadHeader (0x24).ToArray();
+            var header = file.ReadHeader (0x24).ToArray ();
             uint magic = LittleEndian.ToUInt32 (header, 0);
             bool old, be;
             if (0x204D4254 == magic)       // 'TBM '
@@ -93,6 +114,11 @@ namespace GameRes.Formats.Broccoli
                 int ph = (int)T32Format.GetUInt32 (rect, 12, meta.IsBE);
                 if (pw <= 0 || ph <= 0)
                     continue;
+                long row_size = ((long)pw*bytes_per_pixel + 3) & ~3L;
+                if (row_size > int.MaxValue || px <= -pw || py <= -ph)
+                    continue;
+                int src_row = (int)row_size;
+                int source_height = ph;
                 int sx = 0, sy = 0;
                 if (px < 0 || py < 0)
                 {
@@ -110,9 +136,8 @@ namespace GameRes.Formats.Broccoli
                 int ch = Math.Min (ph, height - py);
                 if (cw <= 0 || ch <= 0)
                     continue;
-                int  src_row = (pw*bytes_per_pixel + 3) & ~3;
                 long start = (long)ofs + 16;
-                if (start + (long)src_row*ph > file.Length)
+                if (start + (long)src_row*source_height > file.Length)
                     continue;
                 file.Position = start + (long)sy*src_row;   // skip rows clipped off the top
                 var row = new byte[src_row];

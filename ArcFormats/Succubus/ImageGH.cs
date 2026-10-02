@@ -194,9 +194,8 @@ namespace GameRes.Formats.Succubus
             }
         }
 
-        // GHP3: same bitstream structure as GHP2 with extended prefix tables; the stream
-        // codes OpaqueCount pixels explicitly, gaps are filled with the nearest
-        // preceding value.
+        // GHP3 counts position-advance events; intervening steps can write more pixels.
+        // Gaps are filled with the nearest preceding value.
         void Unpack3 ()
         {
             int width = (int)m_info.Width;
@@ -208,17 +207,17 @@ namespace GameRes.Formats.Succubus
             int x = 0, y = 0;
             int next_x = 0, next_y = 0;
             int count = 0;
-            long guard = 32L * (width * height + Math.Abs (m_info.OpaqueCount)) + 0x1000;
+            long guard = 32L * ((long)width * height + Math.Abs ((long)m_info.OpaqueCount)) + 0x1000;
             int pix = bits > 0 ? ReadBits (bits) : 0;
             while (count < m_info.OpaqueCount)
             {
                 if (--guard < 0) // corrupt stream
-                    break;
+                    throw new InvalidFormatException ();
                 if (rep <= 0)
                 {
                     int ctl = ReadBits (2);
                     if (ctl > 2)
-                        rep = ReadCount3() - 2;
+                        rep = ReadCount3 () - 2;
                     else
                         step = ReadBits (1) + 2 * ctl;
                 }
@@ -234,12 +233,13 @@ namespace GameRes.Formats.Succubus
                 }
                 if (step >= 5)
                 {
-                    int pos = ReadPos3() + next_x;
+                    if (++count == m_info.OpaqueCount)
+                        break;
+                    int pos = ReadPos3 () + next_x;
                     next_y += Math.DivRem (pos, width, out next_x);
                     pix = bits > 0 ? ReadBits (bits) : 0;
                     y = next_y;
                     x = next_x;
-                    ++count;
                 }
                 else
                 {
@@ -267,27 +267,28 @@ namespace GameRes.Formats.Succubus
         // repeat length prefix code, returns the run length + 2
         int ReadCount3 ()
         {
-            int index = ReadBitCount();
+            int index = ReadBitCount ();
             if (0 == index)
                 return 3;
             if (index >= Count3Bits.Length)
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             return Count3Base[index] + ReadBits (Count3Bits[index]) + 4;
         }
 
         // position prefix code, returns the distance + 1
         int ReadPos3 ()
         {
-            int index = ReadBitCount();
+            int index = ReadBitCount ();
             if (index >= Pos3Bits.Length)
-                throw new InvalidFormatException();
+                throw new InvalidFormatException ();
             return Pos3Base[index] + ReadBits (Pos3Bits[index]) + 1;
         }
 
-        static readonly int[] Count3Bits = { 0, 2, 4, 6, 8, 12, 16, 18, 1, 4, 16, 64 };
-        static readonly int[] Count3Base = { 0, 0, 4, 20, 84, 340, 4436, 69972, 2, 8, 32, 128 };
-        static readonly int[]   Pos3Bits = { 2, 4, 6, 8, 12, 16, 18, 1, 4, 16, 64 };
-        static readonly int[]   Pos3Base = { 0, 4, 20, 84, 340, 4436, 69972, 2, 8, 32, 128 };
+        // The prefix table ends before the separate pixel mask table at 0x1002E188.
+        static readonly int[] Count3Bits = { 0, 2, 4, 6, 8, 12, 16, 18 };
+        static readonly int[] Count3Base = { 0, 0, 4, 20, 84, 340, 4436, 69972 };
+        static readonly int[]   Pos3Bits = { 2, 4, 6, 8, 12, 16, 18 };
+        static readonly int[]   Pos3Base = { 0, 4, 20, 84, 340, 4436, 69972 };
 
         internal static int GetColorDepth (int colors)
         {

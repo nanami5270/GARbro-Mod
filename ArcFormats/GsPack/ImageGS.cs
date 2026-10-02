@@ -142,14 +142,18 @@ namespace GameRes.Formats.Gs
         {
             if (file.Length < 0x28)
                 return null;
-            var info = new GswinMetaData { PackedSize = file.ReadUInt32() };
+            var info = new GswinMetaData { PackedSize = file.ReadUInt32 () };
             file.Position = 0x10;
-            info.Width = file.ReadUInt32();
-            info.Height = file.ReadUInt32();
-            info.BPP = file.ReadInt32();
-            if (0 == info.Width || 0 == info.Height)
+            info.Width = file.ReadUInt32 ();
+            info.Height = file.ReadUInt32 ();
+            info.BPP = file.ReadInt32 ();
+            if (0 == info.Width || 0 == info.Height || info.Width > 0x4000 || info.Height > 0x4000)
                 return null;
             if (8 != info.BPP && 24 != info.BPP && 32 != info.BPP)
+                return null;
+            long unpacked_size = (long)info.Width*info.Height*(info.BPP/8) + (8 == info.BPP ? 0x400 : 0);
+            long data_size = file.Length - 0x28;
+            if (0 == info.PackedSize ? data_size != unpacked_size : info.PackedSize > data_size)
                 return null;
             return info;
         }
@@ -173,7 +177,7 @@ namespace GameRes.Formats.Gs
             {
                 var palette = new byte[0x400];
                 if (!ReadExactly (input, palette, palette.Length))
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 bool has_alpha = false;
                 for (int i = 3; i < palette.Length; i += 4)
                 {
@@ -185,7 +189,7 @@ namespace GameRes.Formats.Gs
                 }
                 var indices = new byte[meta.Width*meta.Height];
                 if (!ReadExactly (input, indices, indices.Length))
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 for (int i = 0; i < indices.Length; ++i)
                 {
                     int src = indices[i]*4;
@@ -200,7 +204,7 @@ namespace GameRes.Formats.Gs
             {
                 var bgr = new byte[meta.Width*meta.Height*3];
                 if (!ReadExactly (input, bgr, bgr.Length))
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 for (int i = 0, src = 0, dst = 0; i < meta.Width*meta.Height; ++i, src += 3, dst += 4)
                 {
                     pixels[dst  ] = bgr[src  ];
@@ -212,7 +216,7 @@ namespace GameRes.Formats.Gs
             else
             {
                 if (!ReadExactly (input, pixels, pixels.Length))
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 bool has_alpha = false;
                 for (int i = 3; i < pixels.Length; i += 4)
                 {

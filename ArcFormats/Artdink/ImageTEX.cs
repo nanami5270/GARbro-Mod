@@ -1,5 +1,26 @@
 //! \file       ImageTEX.cs
+//! \date       2026-09-30
 //! \brief      Artdink PS2 TEX image format.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 // A sprite table of 20-byte descriptors; sprites use PS2 GS pixel modes and
 // are composed vertically into a single bitmap, with an optional CLUT.
@@ -45,12 +66,12 @@ namespace GameRes.Formats.Artdink
             if (file.Length < 0x28 + 20)
                 return null;
             file.Position = 0x14;
-            uint width  = file.ReadUInt32();
-            uint height = file.ReadUInt32();
+            uint width  = file.ReadUInt32 ();
+            uint height = file.ReadUInt32 ();
             file.Position = 0x20;
-            uint base_offset  = file.ReadUInt32();
-            uint sprite_count = file.ReadUInt16();
-            uint has_clut     = file.ReadUInt16();
+            uint base_offset  = file.ReadUInt32 ();
+            uint sprite_count = file.ReadUInt16 ();
+            uint has_clut     = file.ReadUInt16 ();
             if (0 == width || 0 == height || width > 16384 || height > 16384)
                 return null;
             if (0 == sprite_count || sprite_count > 0x1000)
@@ -94,7 +115,7 @@ namespace GameRes.Formats.Artdink
             {
                 long clut_addr = 0x28 + (long)meta.Sprites.Count * 20;
                 file.Position = clut_addr;
-                uint clut_rel = file.ReadUInt32();
+                uint clut_rel = file.ReadUInt32 ();
                 long clut_offset = (long)meta.BaseOffset + clut_rel;
                 if (clut_offset + 0x400 <= file.Length)
                 {
@@ -120,7 +141,7 @@ namespace GameRes.Formats.Artdink
                 long src_size = (long)row_size * sprite.Height;
                 long src_offset = (long)meta.BaseOffset + sprite.RelOffset;
                 if (src_offset + src_size > file.Length)
-                    throw new InvalidFormatException();
+                    throw new InvalidFormatException ();
                 file.Position = src_offset;
                 var src = file.ReadBytes ((int)src_size);
                 int copy_width = Math.Min (sprite.Width, width);

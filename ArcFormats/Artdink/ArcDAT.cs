@@ -1,5 +1,26 @@
 //! \file       ArcDAT.cs
+//! \date       2026-09-30
 //! \brief      Artdink (PlayStation 2) PIDX resource archive.
+//
+// Copyright (C) 2026 by morkt
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to
+// deal in the Software without restriction, including without limitation the
+// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+// sell copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+// IN THE SOFTWARE.
 //
 // Galaxy Angel (PS2) resource archives: entries are addressed by a directory table
 // and by FSTS subtables; payloads may be ARZ-compressed.
@@ -45,8 +66,8 @@ namespace GameRes.Formats.Artdink
                 return null;
             if (table2_count >= 0x40000)
                 return null;
-            var dir = new List<Entry>();
-            var names = new HashSet<string>();
+            var dir = new List<Entry> ();
+            var names = new HashSet<string> ();
             if (table2_count > 0 && !ReadTable2 (file, dir, names, table2_count, root_count))
                 return null;
             if (table3_size > 0)
@@ -86,7 +107,7 @@ namespace GameRes.Formats.Artdink
             for (int i = 0; i < (int)count; ++i)
             {
                 long offset = table_offset + i * 24;
-                var record = new Table2Record();
+                var record = new Table2Record ();
                 record.Name = ReadString (file, string_pool + file.View.ReadUInt32 (offset + 4));
                 record.IsDirectory = 1 == file.View.ReadUInt32 (offset);
                 if (record.IsDirectory)
@@ -102,8 +123,8 @@ namespace GameRes.Formats.Artdink
                 }
                 records[i] = record;
             }
-            var paths = new Dictionary<int, string>();
-            var visited = new HashSet<int>();
+            var paths = new Dictionary<int, string> ();
+            var visited = new HashSet<int> ();
             int root = (int)Math.Min (root_count, count);
             if (root > 0)
             {
@@ -244,7 +265,7 @@ namespace GameRes.Formats.Artdink
             using (var mem = new MemoryStream (payload, false))
             using (var lzss = new LzssReader (mem, payload_size, (int)unpacked_size))
             {
-                lzss.Unpack();
+                lzss.Unpack ();
                 output = lzss.Data;
             }
             return true;
