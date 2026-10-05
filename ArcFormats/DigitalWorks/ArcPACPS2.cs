@@ -85,12 +85,14 @@ namespace GameRes.Formats.DigitalWorks
             var input = arc.File.CreateStream (entry.Offset+8, entry.Size-8);
             bool embedded_lzs = (input.Signature & ~0xF0u) == 0x535A4C0F; // 'LZS'
             var lzs = new LzssStream (input);
+            lzs.Config.FrameFill = 0x20;
             if (embedded_lzs)
             {
                 var header = new byte[8];
                 lzs.Read (header, 0, 8);
                 pent.UnpackedSize = header.ToUInt32 (4);
                 lzs = new LzssStream (lzs);
+                lzs.Config.FrameFill = 0x20;
             }
             return lzs;
         }

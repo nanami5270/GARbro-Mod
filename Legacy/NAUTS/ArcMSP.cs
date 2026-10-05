@@ -1,8 +1,8 @@
-//! \file       ArcARC.cs
-//! \date       2017 Dec 25
-//! \brief      Succubus resource archive.
+//! \file       ArcMSP.cs
+//! \date       2026-10-01
+//! \brief      NAUTS screenshot archive format.
 //
-// Copyright (C) 2017 by morkt
+// Copyright (C) 2026 by morkt
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to
@@ -23,60 +23,55 @@
 // IN THE SOFTWARE.
 //
 
-using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
-using System.IO;
 
-namespace GameRes.Formats.Succubus
+namespace GameRes.Formats.Nauts
 {
     [Export(typeof(ArchiveFormat))]
-    public class ArcOpener : ArchiveFormat
+    public class MspOpener : ArchiveFormat
     {
-        public override string         Tag { get { return "ARC/ARC1"; } }
-        public override string Description { get { return "Succubus resource archive"; } }
-        public override uint     Signature { get { return 0x31435241; } } // 'ARC1'
+        public override string         Tag { get { return "MSP/NAUTS"; } }
+        public override string Description { get { return "NAUTS MSP screenshot archive"; } }
+        public override uint     Signature { get { return 0x4D535020; } } // ' PSM'
         public override bool  IsHierarchic { get { return false; } }
         public override bool      CanWrite { get { return false; } }
 
+        public MspOpener ()
+        {
+            Extensions = new string[] { "msp" };
+        }
+
         public override ArcFile TryOpen (ArcView file)
         {
+            if (!file.Name.HasExtension ("msp"))
+                return null;
+            if (Signature != file.View.ReadUInt32 (0))
+                return null;
             int count = file.View.ReadInt32 (4);
             if (!IsSaneCount (count))
                 return null;
-            uint index_offset = file.View.ReadUInt32 (8);
-            if (index_offset < 0x10)
+            long index_size = HeaderSize + (long)count * EntrySize;
+            if (index_size > file.MaxOffset)
                 return null;
-            bool is_voice = Path.GetFileNameWithoutExtension (file.Name).Equals ("voice", StringComparison.InvariantCultureIgnoreCase);
-
             var dir = new List<Entry> (count);
+            long index_offset = HeaderSize;
+            long data_offset = index_size;
             for (int i = 0; i < count; ++i)
             {
-                if (index_offset >= file.MaxOffset)
-                    return null;
-                var name = file.View.ReadString (index_offset, 0x10);
-                var entry = FormatCatalog.Instance.Create<Entry> (name);
-                entry.Size   = file.View.ReadUInt32 (index_offset+0x10);
-                entry.Offset = file.View.ReadUInt32 (index_offset+0x14);
+                var entry = FormatCatalog.Instance.Create<Entry> (file.View.ReadString (index_offset, 16));
+                entry.Offset = data_offset;
+                entry.Size = file.View.ReadUInt32 (index_offset + 20);
                 if (!entry.CheckPlacement (file.MaxOffset))
                     return null;
-                if (string.IsNullOrEmpty (entry.Type) && is_voice)
-                    entry.Type = "audio";
-                if (string.IsNullOrEmpty (entry.Type) && entry.Name.HasExtension ("yx"))
-                    entry.Type = "script";
                 dir.Add (entry);
-                index_offset += 0x18;
-            }
-            // entries without a recognised extension (e.g. sound archives) are typed by content
-            foreach (var entry in dir)
-            {
-                if (!string.IsNullOrEmpty (entry.Type))
-                    continue;
-                var res = AutoEntry.DetectFileType (file.View.ReadUInt32 (entry.Offset));
-                if (null != res)
-                    entry.ChangeType (res);
+                data_offset += entry.Size;
+                index_offset += EntrySize;
             }
             return new ArcFile (file, this, dir);
         }
+
+        const long HeaderSize = 0x14;
+        const int  EntrySize  = 0x28;
     }
 }
