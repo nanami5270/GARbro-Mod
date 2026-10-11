@@ -120,7 +120,9 @@
     <Compile Include="Bom\ImageGRP.cs" />
     <Compile Include="Broccoli\ArcP00.cs" />
     <Compile Include="Broccoli\BroccoliGrp.cs" />
-    <Compile Include="Broccoli\BroccoliPak.cs" />
+    <Compile Include="Broccoli\ImageT32.cs" />
+    <Compile Include="Broccoli\ImageTbm.cs" />
+    <Compile Include="Broccoli\PakVideoDecrypt.cs" />
     <Compile Include="CottonClub\ImageLMG.cs" />
     <Compile Include="Desire\ArcDSV.cs" />
     <Compile Include="Desire\ImageDES.cs" />
@@ -188,6 +190,9 @@
     <Compile Include="Mink\ImageFC.cs" />
     <Compile Include="Mink\ImageFD.cs" />
     <Compile Include="Mmfass\ArcSDA.cs" />
+    <Compile Include="NAUTS\ArcDPK.cs" />
+    <Compile Include="NAUTS\ArcMSP.cs" />
+    <Compile Include="NAUTS\ArcTTP.cs" />
     <Compile Include="Nekotaro\ImageNCG.cs" />
     <Compile Include="Neon\ArcAR2.cs" />
     <Compile Include="Pias\EncryptedGraphDat.cs" />

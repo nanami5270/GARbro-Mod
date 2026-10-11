@@ -163,6 +163,7 @@
     <Compile Include="Abogado\ImageKG.cs" />
     <Compile Include="Actgs\ArcCG.cs" />
     <Compile Include="Actgs\ArcDAT.cs" />
+    <Compile Include="Actgs\ImagePB6.cs" />
     <Compile Include="Adobe\ArcAIR.cs" />
     <Compile Include="Ads\ArcPAC.cs" />
     <Compile Include="AdvDx\ArcPKD.cs" />
@@ -176,12 +177,20 @@
     <Compile Include="aNCHOR\ArcFPD.cs" />
     <Compile Include="aNCHOR\AudioFCD.cs" />
     <Compile Include="aNCHOR\Blowfish.cs" />
+    <Compile Include="Artdink\ArcDAT.cs" />
+    <Compile Include="Artdink\ImageAGI.cs" />
+    <Compile Include="Artdink\ImageFAC.cs" />
+    <Compile Include="Artdink\ImageTAG.cs" />
+    <Compile Include="Artdink\ImageTEX.cs" />
+    <Compile Include="Artdink\ImageTXF.cs" />
+    <Compile Include="Artdink\Ps2ImageUtil.cs" />
     <Compile Include="CatSystem\ArcBinV1.cs" />
     <Compile Include="CatSystem\ArcPidaV1.cs" />
     <Compile Include="Entergram\ArcPacV1.cs" />
     <Compile Include="Entergram\QuickLZ.cs" />
     <Compile Include="FrontierWorks\ArcPCARC.cs" />
     <Compile Include="Artemis\ImageNekoPNG.cs" />
+    <Compile Include="Artemis\ImageIPG.cs" />
     <Compile Include="ComicPlayer\ArcCP3.cs" />
     <Compile Include="ComicPlayer\ArcCPF.cs" />
     <Compile Include="CsWare\AudioWAV.cs" />
@@ -224,6 +233,7 @@
     <Compile Include="BlueGale\ImageBBM.cs" />
     <Compile Include="ClickTeam\ArcMF.cs" />
     <Compile Include="DxLib\ArcDX8.cs" />
+    <Compile Include="Headlock\ArcDAT.cs" />
     <Compile Include="Hecate\ArcDAT.cs" />
     <Compile Include="HuneX\ArcHFA.cs" />
     <Compile Include="HuneX\ArcMZP.cs" />
@@ -415,6 +425,7 @@
     <Compile Include="Leaf\AudioP16.cs" />
     <Compile Include="Leaf\ImageBJR.cs" />
     <Compile Include="Leaf\ImageLFG.cs" />
+    <Compile Include="Leaf\ImageLFB.cs" />
     <Compile Include="Leaf\WidgetLEAF.xaml.cs">
       <DependentUpon>WidgetLEAF.xaml</DependentUpon>
     </Compile>
